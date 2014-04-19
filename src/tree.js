@@ -134,19 +134,12 @@ bst_insert(75, root);
 console.log(root);
 
 var bst_search = function(val, node) {
+    if (node==null) { return false; }
     if (val===node.val) { return true; }
     else if (val < node.val) {
-        if (node.left == null) {
-            return false;
-        } else {
-            return bst_search(val, node.left);
-        }
+        return bst_search(val, node.left );
     } else {
-        if (node.right == null) {
-            return false;
-        } else {
-            return bst_search(val, node.right);
-        }
+        return bst_search(val, node.right);
     }
 };
 
