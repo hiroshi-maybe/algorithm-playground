@@ -145,3 +145,100 @@ var bst_search = function(val, node) {
 
 console.log(bst_search(10, root));
 console.log(bst_search(75, root));
+
+/*
+7
+|  \
+5   8
+|\   \
+2 6   10
+|\
+1 3
+|
+0
+
+7
+|  \
+3   8
+|\   \
+2 6   10
+|
+1
+|
+0
+
+7
+|  \
+2   8
+|\   \
+1 6   10
+|
+0
+*/
+
+// Return stack having path to max node
+var find_max = function(node) {
+    var stack = [];
+    while (node!=null) {
+        stack.push(node);
+        node = node.right;
+    }
+    return stack;
+};
+
+var bst_delete = function(val, node, parent) {
+    var child=null, successors, left_max, left_max_parent, child_new;
+
+    // Reached bottom
+    if (node==null) { return false; }
+
+    // Target found
+    if (val===node.val) {
+        /* 1. Have both children */
+        if (node.left!=null && node.right!=null) {
+            successors = find_max(node.left);
+            child = left_max = successors.pop();
+            left_max_parent = successors.pop();
+            // Restructure recursively
+            child_new = bst_delete(left_max.val, left_max, left_max_parent);
+            child.right = node.right;
+            child.left = node.left===child ? child_new : node.left;
+        } else /* 2. Have either child or no child below */
+        if (node.left!=null) {
+            child = node.left;
+        } else if (node.right!=null) {
+            child = node.right;
+        }
+        // If target is a root node, return new head
+        if (parent==null) { return child; }
+
+        if (node.val <= parent.val) {
+            parent.left  = child;
+        } else {
+            parent.right = child;
+        }
+        return true;
+    }
+
+    // Search child
+    if (val<node.val) {
+        bst_delete(val, node.left , node);
+    } else {
+        bst_delete(val, node.right, node);
+    }
+};
+
+root = bst_insert(7);
+bst_insert(5, root);
+bst_insert(8, root);
+bst_insert(2, root);
+bst_insert(6, root);
+bst_insert(10, root);
+bst_insert(1, root);
+bst_insert(3, root);
+bst_insert(0, root);
+
+bst_delete(5, root);
+bst_delete(3, root);
+
+console.log(root);
