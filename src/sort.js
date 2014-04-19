@@ -1,10 +1,12 @@
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
+// Merge Sort:
 
-var merge_sort_in = function(ar, s, e) {
+var merge_sort_inplace = function(ar, s, e) {
     var left, right, left_tail;
     if (s===e) { return; }
     left_tail = s+Math.floor((e-s)/2);
-    merge_sort_in(ar, s, left_tail);
-    merge_sort_in(ar, left_tail+1, e);
+    merge_sort_inplace(ar, s, left_tail);
+    merge_sort_inplace(ar, left_tail+1, e);
     merge(ar, s, left_tail, e);
 };
 
@@ -27,18 +29,18 @@ var merge = function(ar, l_h, l_t, r_t) {
 };
 
 var ar = [8,2,6,3,4,3,9,1];
-merge_sort_in(ar, 0, ar.length-1);
+merge_sort_inplace(ar, 0, ar.length-1);
 console.log(ar);
 
-var merge_sort = function(ar) {
+var merge_sort_immutable = function(ar) {
     var left, right, len = ar.length;
     if (len===1) { return ar; }
     left = merge_sort(ar.slice(0,Math.ceil(len/2)));
     right = merge_sort(ar.slice(Math.ceil(len/2)));
-    return merge_(left,right);
+    return _merge_immutable(left,right);
 };
 
-var merge_ = function(l, r) {
+var _merge_immutable = function(l, r) {
     var l_val, r_val, val, result = [];
     if (l==null) { l = []; }
     if (r==null) { r = []; }
@@ -57,7 +59,10 @@ var merge_ = function(l, r) {
 ar = [8,2,6,3,4,3,9,1];
 console.log(merge_sort(ar));
 
-var quick_sort = function(ar) {
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
+// Quicksort:
+
+var quick_sort_immutable = function(ar) {
     var i=0, left=[], right=[], pivot;
     if (ar.length<2) { return ar; }
     pivot = ar.shift();
@@ -68,12 +73,12 @@ var quick_sort = function(ar) {
             right.push(ar[i]);
         }
     }  
-    return quick_sort(left).concat([pivot]).concat(quick_sort(right));
+    return quick_sort_immutable(left).concat([pivot]).concat(quick_sort_immutable(right));
 };
 
 // 0 2 2 2 [ 1, 2, 3, 3, 4, 6, 9, 8 ]
 // 1 3 2 1 [ 1, 2, 3, 3, 4, 6, 9, 8 ]
-var quick_sort_in = function(ar, s, e) {
+var quick_sort_inplace_headpivot = function(ar, s, e) {
     var temp, i=s+1,j=e-1, pivot = ar[s];
     if (e-s<2) { return; }
     while (i<j) {
@@ -89,11 +94,11 @@ var quick_sort_in = function(ar, s, e) {
     }
     ar[s] = ar[j];
     ar[j] = pivot;
-    quick_sort_in(ar, s, j);
-    quick_sort_in(ar, j+1, e);
+    quick_sort_inplace_headpivot(ar, s, j);
+    quick_sort_inplace_headpivot(ar, j+1, e);
 };
 
-var quick_sort_in_ = function(ar, s, e) {
+var quick_sort_inplace_tailpivot = function(ar, s, e) {
     var pivot = ar[e-1], temp, i=s, j=i;
     if (e-s<2) { return; }
     for (; i<e-1; i+=1) {
@@ -108,15 +113,18 @@ var quick_sort_in_ = function(ar, s, e) {
     }
     ar[e-1] = ar[j];
     ar[j] = pivot;
-    quick_sort_in_(ar, s, j);
-    quick_sort_in_(ar, j+1, e);
+    quick_sort_inplace_tailpivot(ar, s, j);
+    quick_sort_inplace_tailpivot(ar, j+1, e);
 };
 
 ar = [8,2,6,3,4,3,9,1];
-console.log(quick_sort(ar));
+console.log(quick_sort_immutable(ar));
 ar = [8,2,6,3,4,3,9,1];
-quick_sort_in_(ar, 0, ar.length);
+quick_sort_tailpivot(ar, 0, ar.length);
 console.log(ar);
+
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
+// Order Statistics:
 
 var kth = function(ar, s, e, k) {
     var pivot = ar[e], i=s, j=i, temp;
@@ -146,6 +154,9 @@ var kth = function(ar, s, e, k) {
 
 ar = [8,2,6,3,4,3,9,1];
 console.log(kth(ar, 0, ar.length-1, 5));
+
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
+// Question: Nearest Neighbor
 
 var neighbor = function(ar, k) {
     var i=0, len=ar.length, neighbors=[], nbr, l_i, u_i, j;

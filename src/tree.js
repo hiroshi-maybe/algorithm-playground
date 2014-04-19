@@ -1,4 +1,4 @@
-var bfs = function(nodes) {
+var bfs_recursive = function(nodes) {
     var node, children = [];
     if (nodes.length==0) { return; }
     console.log(nodes.map(function(node){ return node.val; }).join(" "));
@@ -11,7 +11,7 @@ var bfs = function(nodes) {
 
 // 2014/4/14 10:00-10:07
 
-var bfs_ = function(root) {
+var bfs = function(root) {
     var node, queue = [root], children = [];
     console.log(root.val);
     while (queue.length>0) {
@@ -80,7 +80,7 @@ head3 = {val:"F",
           right: {val: "I",
             left: {val:"H"}}}};
 
-bfs_(head2);
+bfs_recursive(head2);
 //bfs([head]);
 //pre_order(head3);
 //in_order(head3);
@@ -89,7 +89,7 @@ post_order(head3);
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Binary Search Tree Validity
 
-var isValid = function(node, min, max) {
+var is_valid_bst = function(node, min, max) {
     var left = true, right = true;
     min = min || Number.MIN_VALUE;
     max = max || Number.MAX_VALUE;
@@ -100,17 +100,17 @@ var isValid = function(node, min, max) {
         if (node.left.val > node.val) {
             left = false;
         } else {
-            left = isValid(node.left, min, node.val);
+            left = is_valid_bst(node.left, min, node.val);
         }
     }
     if (node.right!=null) {
         if (node.right.val < node.val) {
             right = false;
         } else {
-            right = isValid(node.right, node.val, max);
+            right = is_valid_bst(node.right, node.val, max);
         }
     }
     return left && right;
 };
 
-console.log(isValid(head2));
+console.log(is_valid_bst(head2));

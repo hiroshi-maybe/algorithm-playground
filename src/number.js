@@ -1,15 +1,5 @@
 
 var factorialZeros = function(n) {
-    var m, i=1, f2=0, f5=0;
-    for (;i<n+1; i+=1) {
-        m = i;
-        while(m % 2==0) { m/=2; f2+=1; }
-        while(m % 5==0) { m/=5; f5+=1; }
-    }
-    return Math.min(f2,f5);
-};
-
-var factorialZeros_ = function(n) {
     var i=1, f5=0, m;
     while((m=Math.pow(5,i))<n) {
       f5+=Math.floor(n/m);
@@ -18,9 +8,12 @@ var factorialZeros_ = function(n) {
     return f5;
 };
 
-console.log(factorialZeros_(100));
+console.log(factorialZeros(100));
 
-var target_sum = function(target, ar) {
+// http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_A.pdf
+// Question: Target Sum
+
+var target_sum_hash = function(target, ar) {
     var i=0, len=ar.length, hash = {};
     for (; i<len; i+=1) {
         if (hash[ar[i]]) return true;
@@ -29,13 +22,13 @@ var target_sum = function(target, ar) {
     return false;
 };
 
-var target_sum_ = function(target, ar) {
+var target_sum_pointer = function(target, ar) {
     var i=0, j=ar.length-1;
     ar.sort(function(a,b) { return +a-(+b);});
     while (i<j) {
         while (ar[i]+ar[j]<target && ar[i]!=null) { i+=1; }
-            if (ar[i]==null) { return false; }
-            if (ar[i]+ar[j]==target) return true;
+        if (ar[i]==null) { return false; }
+        if (ar[i]+ar[j]==target) return true;
 
         while (ar[i]+ar[j]>target && ar[j]!=null) { j-=1; }
         if (ar[j]==null) { return false; }
@@ -45,12 +38,12 @@ var target_sum_ = function(target, ar) {
 };
 
 var ar = [8,2,6,3,4,3,9,1];
-console.log(target_sum_(60,ar));
+console.log(target_sum_pointer(60,ar));
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Odd Man Out 2014/4/13 16:00-16:16
 
-var find_odd = function(ar) {
+var find_odd_hash = function(ar) {
     var i=0, len=ar.length, hash = {};
     for(; i<len; i+=1) {
         if (hash[ar[i]]) {
@@ -63,12 +56,7 @@ var find_odd = function(ar) {
 };
 
 // Super awesome!!!
-var find_odd_ = function(ar) {
-/*  var i=0, len=ar.length, b=0;
-  for(; i<len; i+=1) {
-    b ^= ar[i];
-  }
-  return b;*/
+var find_odd_xor = function(ar) {
     return ar.reduce(function(ac,n) {
         return ac^n;
     }, 0);
@@ -80,7 +68,7 @@ console.log(find_odd_(ar2));
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Maximal Subarray 18:44-19:25
 
-var max_subarray = function(ar) {
+var max_subarray_memo = function(ar) {
     var i=0, j, len=ar.length, prev, memo=[], m_end, m_start, max = Number.MIN_VALUE;
     for (; i<len; i+=1) {
         memo[i] = [];
@@ -100,13 +88,12 @@ var max_subarray = function(ar) {
     return ar.slice(m_start, m_end+1);
 };
 
-var max_subarray_ = function(ar) {
+var max_subarray = function(ar) {
     var x, i=0, len=ar.length, max_ending_here = max_so_far = 0;
     for (; i<len; i+=1) {
         x = ar[i];
         max_ending_here = Math.max(0, max_ending_here + x);
         max_so_far = Math.max(max_so_far, max_ending_here);
-        console.log(i+"("+x+")", max_ending_here, max_so_far);
     }
     return max_so_far;
 };

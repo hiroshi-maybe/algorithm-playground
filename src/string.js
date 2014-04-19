@@ -1,5 +1,5 @@
 
-var reverse = function(ar) {
+var reverse_array_simple = function(ar) {
     var temp, i=0, len = ar.length;
     for (;i<(len-1)/2; i+=1) {
         temp = ar[i];
@@ -9,7 +9,7 @@ var reverse = function(ar) {
     return ar;
 };
 
-console.log(reverse([0,1,2,3,4]));
+console.log(reverse_array_simple([0,1,2,3,4]));
 
 var reverse_word = function(str) {
     var result = "", ch = "", buf = "", i=0, len = str.length;
@@ -28,22 +28,22 @@ var reverse_word = function(str) {
     return result;
 };
 
-var reverse_word_ = function(str) {
+var reverse_word_1liner = function(str) {
     return str.split(" ").reverse().join(" ");
 };
 
-var reverse_word__ = function(ar) {
+var reverse_word_2phase_reverse = function(ar) {
     var i=0, len=ar.length, word_len=0;
-    ar = reverse(ar);
+    ar = reverse_array(ar);
     for (; i<len; i+=1) {
         if (ar[i]===" ") {
-            reverse_(ar, i-word_len, i-1);
+            reverse_str(ar, i-word_len, i-1);
             word_len=0;
         } else {
             word_len+=1;
         }
     }
-    reverse_(ar, i-word_len, i-1);
+    reverse_str(ar, i-word_len, i-1);
     return ar;
 };
 
@@ -53,15 +53,15 @@ var swap = function(ar, i, j) {
     ar[i] = temp;
 };
 
-var reverse_ = function(ar, s, e) {
+var reverse_str = function(ar, s, e) {
     var i=s;
     for (; i<s+(e-s)/2; i+=1) {
         swap(ar, i, e-i+s);
     }
 };
 
-//console.log(reverse_word_("abc def  ghi"));
-console.log(reverse_word__(" abc def  ghi ".split("")));
+console.log(reverse_word("abc def  ghi"));
+console.log(reverse_word_2phase_reverse(" abc def  ghi ".split("")));
 
 var sub_pat = function(str, pat) {
     var ch;
@@ -81,6 +81,8 @@ var sub_pat = function(str, pat) {
 console.log(sub_pat("abc def", "bd"));
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_3.pdf
+// Classic Question #7: Ransom Note
+
 var ransom_note = function(target, set) {
   var i=0, len, ch, dic = target.replace(" ").split("").reduce(function(acc, ch){
       if (!acc[ch]) { acc[ch]=0; }
@@ -102,6 +104,8 @@ var ransom_note = function(target, set) {
 console.log(ransom_note("no scheme", "programming interviews are weird in the church"));
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_A.pdf
+// Question: Substring
+
 var substring = function(target, source) {
     var i=0, j=0, lens=source.length, lent=target.length;
     for (; i<lens; i+=1) {
