@@ -1,2 +1,4 @@
-algorithm-training
+algorithm-playground
 ==================
+
+Miscellaneous algorithms
