@@ -89,7 +89,7 @@ post_order(head3);
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Binary Search Tree Validity
 
-var is_valid_bst = function(node, min, max) {
+var bst_is_valid = function(node, min, max) {
     var left = true, right = true;
     min = min || Number.MIN_VALUE;
     max = max || Number.MAX_VALUE;
@@ -100,17 +100,46 @@ var is_valid_bst = function(node, min, max) {
         if (node.left.val > node.val) {
             left = false;
         } else {
-            left = is_valid_bst(node.left, min, node.val);
+            left = bst_is_valid(node.left, min, node.val);
         }
     }
     if (node.right!=null) {
         if (node.right.val < node.val) {
             right = false;
         } else {
-            right = is_valid_bst(node.right, node.val, max);
+            right = bst_is_valid(node.right, node.val, max);
         }
     }
     return left && right;
 };
 
-console.log(is_valid_bst(head2));
+console.log(bst_is_valid(head2));
+
+var bst_insert = function(val, node) {
+    // Initialize tree
+    if (node == null) { return {val: val, left: null, right: null}; }
+
+    if (val <= node.val) {
+        // Insert left
+        if (node.left == null) {
+            node.left = { val: val, left: null, right: null };
+            return;
+        } else {
+            bst_insert(val, node.left);
+        }
+    } else {
+        // Insert right
+        if (node.right == null) {
+            node.right = { val: val, left: null, right: null };
+            return;
+        } else {
+            bst_insert(val, node.right);
+        }
+    }
+};
+
+var root = bst_insert(50);
+bst_insert(100, root);
+bst_insert(25, root);
+bst_insert(75, root);
+console.log(root);
