@@ -6,7 +6,7 @@ var bfs_recursive = function(nodes) {
       if (node.left ) children.push(node.left );
       if (node.right) children.push(node.right);    
     }
-    bfs(children);
+    bfs_recursive(children);
 };
 
 // 2014/4/14 10:00-10:07
@@ -80,8 +80,8 @@ head3 = {val:"F",
           right: {val: "I",
             left: {val:"H"}}}};
 
-bfs_recursive(head2);
-//bfs([head]);
+bfs(head2);
+//bfs_recursive([head]);
 //pre_order(head3);
 //in_order(head3);
 post_order(head3);
