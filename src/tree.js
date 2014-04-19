@@ -242,3 +242,13 @@ bst_delete(5, root);
 bst_delete(3, root);
 
 console.log(root);
+
+var bst_sort = function(node, _ar) {
+    var ar = _ar || [];
+    if (node==null) { return; }
+    bst_sort(node.left , ar);
+    ar.push(node.val);
+    bst_sort(node.right, ar);
+    if (_ar==null) { return ar; }
+};
+console.log(bst_sort(head2));
