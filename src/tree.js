@@ -143,3 +143,23 @@ bst_insert(100, root);
 bst_insert(25, root);
 bst_insert(75, root);
 console.log(root);
+
+var bst_search = function(val, node) {
+    if (val===node.val) { return true; }
+    else if (val < node.val) {
+        if (node.left == null) {
+            return false;
+        } else {
+            return bst_search(val, node.left);
+        }
+    } else {
+        if (node.right == null) {
+            return false;
+        } else {
+            return bst_search(val, node.right);
+        }
+    }
+};
+
+console.log(bst_search(10, root));
+console.log(bst_search(75, root));
