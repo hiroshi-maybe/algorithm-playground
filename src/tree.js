@@ -252,3 +252,136 @@ var bst_sort = function(node, _ar) {
     if (_ar==null) { return ar; }
 };
 console.log(bst_sort(head2));
+
+// ********************** AVL tree *********************//
+// 2014/4/19 16:20-18:00 20:00-21:00
+
+var AvlNode = function(val) {
+//    if (!this instanceof AvlNode) { return new AvlNode(); }
+    this.val = val;
+    this.parent = null;
+    this.left   = null;
+    this.right  = null;
+};
+AvlNode.prototype.balance = function() {
+    return this.height("right")-this.height("left");
+};
+
+AvlNode.prototype.height = function(side) {
+    // Side specified
+    if (side!=null) {
+        return this[side]==null ? 0 : this[side].height();
+    }
+    return Math.max(this.height("left")+1, this.height("right")+1);
+};
+
+var AVL = function() {
+    this.root = null;
+};
+
+AVL.prototype.insert = function(k) {
+    var newNode = new AvlNode(k);
+    this._insert(this.root, newNode);
+};
+
+AVL.prototype._insert = function(node, newNode) {
+
+    if (node==null) {
+        this.root = newNode; return;
+    }
+
+    if (newNode.val<=node.val) {
+        if (node.left==null) {
+            node.left = newNode; newNode.parent = node;
+            this.rebalance(node);
+        } else {
+            this._insert(node.left, newNode);
+        }
+    } else {
+        if (node.right==null) {
+            node.right = newNode; newNode.parent = node;
+            this.rebalance(node);
+        } else {
+            this._insert(node.right, newNode);
+        }
+    }
+};
+
+AVL.prototype.rebalance = function(cur) {
+    var balance, balance_child, newParent;
+
+    // Reached root. Finished.
+    if (cur==null) { return; }
+
+    balance = cur.balance()
+
+    if (Math.abs(balance) < 2) {
+        this.rebalance(cur.parent);
+        return;
+    }
+
+    if (balance<=-2) {
+        // left > right
+        balance_child = cur.left.balance();
+        if (balance_child > 0) {
+            cur = this.rotateRight(cur.left).parent;
+        }
+        newParent = this.rotateLeft(cur);
+        this.rebalance(newParent.parent);
+    } else {
+        // right > left
+        balance_child = cur.right.balance();
+        if (balance_child < 0) {
+            console.log("before",cur.right);
+            cur = this.rotateLeft(cur.right).parent;
+            console.log("after",cur);
+        }
+        newParent = this.rotateRight(cur);
+        this.rebalance(newParent.parent);
+    }
+
+};
+
+AVL.prototype.rotateLeft = function(cur) {
+    var newParent = cur.left, grandParent;
+
+    grandParent = newParent.parent = cur.parent;
+    if (grandParent==null) {
+        this.root = newParent;
+    } else {
+        if (grandParent.left===cur) {
+            grandParent.left  = newParent;
+        } else {
+            grandParent.right = newParent;
+        }
+
+    }
+    cur.left = newParent.right; if (cur.left!=null) { cur.left.parent = cur; }
+    cur.parent = newParent; newParent.right = cur;
+    return newParent;
+};
+
+AVL.prototype.rotateRight = function(cur) {
+    var newParent = cur.right, grandParent;
+    grandParent = newParent.parent = cur.parent;
+    if (grandParent==null) {
+        this.root = newParent;
+    } else {
+        if (grandParent.right===cur) {
+            grandParent.right = newParent;
+        } else {
+            grandParent.left  = newParent;
+        }
+    }
+    cur.right = newParent.left; if (cur.right!=null) { cur.right.parent = cur; }
+    cur.parent = newParent; newParent.left = cur;
+    return newParent;
+};
+
+var avl = new AVL();
+avl.insert(3);
+avl.insert(1);
+avl.insert(2);
+
+console.log(avl.root);
+
