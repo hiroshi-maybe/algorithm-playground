@@ -378,10 +378,75 @@ AVL.prototype.rotateRight = function(cur) {
     return newParent;
 };
 
+// 2014/4/20 2:40-1:50
+
+AVL.prototype.delete = function(k) {
+    this._delete(this.root, k);
+};
+
+AVL.prototype._delete = function(node, k) {
+    var successor, removed, child, parent;
+
+    if (node==null) { return; }
+
+    // current node is deleted
+    if (k===node.val) {
+        if (node.left!=null && node.right!=null) {
+            successor = this.successor(node);
+            console.log("successor",successor.val);
+            node.val = successor.val;
+            removed = successor;
+        } else {
+            removed = node;
+        }
+        // `removed` should have 0/1 child.
+        child = removed.left==null ? removed.right : removed.left;
+        parent = removed.parent;
+        if (parent==null) {
+            /* root is removed */
+            this.root = null;
+            if (child==null) { return; } /* No node in tree */
+            this.root = child; child.parent = null;
+        } else {
+            if (parent.right===removed) {
+                parent.right = child;
+            } else {
+                parent.left = child;
+            }
+            if(child!=null){ child.parent = parent; }
+        }
+        this.rebalance(parent);
+        return;
+    }
+
+    if (k < node.val) {
+        this._delete(node.left , k);
+    } else if (k > node.val) {
+        this._delete(node.right, k);
+    }
+
+};
+
+AVL.prototype.successor = function(node) {
+    var node = node.right;
+    while (node.left!=null) {
+        node = node.left;
+    }
+    return node;
+};
+
 var avl = new AVL();
+avl.insert(5);
 avl.insert(3);
-avl.insert(1);
+avl.insert(8);
 avl.insert(2);
+avl.insert(4);
+avl.insert(7);
+avl.insert(9);
+avl.insert(1);
+
+avl.delete(5);
+avl.delete(8);
 
 console.log(avl.root);
 
