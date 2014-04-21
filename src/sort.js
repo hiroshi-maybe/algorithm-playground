@@ -205,3 +205,52 @@ var counting_sort = function(ar) {
 
 console.log(counting_sort([3,0,2,0,0,2,2]));
 
+// Implement to use in bucket sort
+var insertion_sort = function(ar) {
+    var i=1, j, temp, len=ar.length;
+    if (len<2) { return ar; }
+    for (; i<len; i+=1) {
+        for (j=0; j<=i; j+=1) {
+            if (ar[j] <= ar[i]) { continue; }
+            temp = ar[i];
+            ar[i] = ar[j];
+            ar[j] = temp;
+        }
+    }
+    return ar;
+};
+
+console.log(insertion_sort([15,9,8,1,4,11,7,12,13]));
+
+var bucket_sort = function(ar) {
+    var min=Infinity, max=-Infinity, bucket, hash, bucket_count, i=0;
+    if (ar.length<1) { return ar; }
+    ar.forEach(function(val) {
+        if (val < min) { min = val; }
+        if (val > max) { max = val; }
+    });
+    bucket_count = Math.ceil((max-min)/3);
+    hash = function(i) { return Math.floor((i-min)/3); };
+
+    // make bucket
+    bucket = ar.reduce(function(bucket, val) {
+        var _hash = hash(val);
+        bucket[_hash] = bucket[_hash] || [];
+        bucket[_hash].push(val);
+        return bucket;
+    }, []);
+
+    // bucket -> array
+    bucket.forEach(function(slot) {
+        insertion_sort(slot);
+        slot.forEach(function(val,j) {
+            ar[i] = val;
+            i+=1;
+        });
+    });
+    return ar;
+};
+
+console.log(bucket_sort([7,5,13,2,14,1,6]));
+
+
