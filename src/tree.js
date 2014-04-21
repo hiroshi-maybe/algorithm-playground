@@ -465,25 +465,28 @@ Heap.prototype.build = function() {
         this.heapify(i);
     }
 };
-Heap.prototype.heapify = function(i) {
+Heap.prototype.heapify = Heap.prototype.bubbleDown = function(i) {
     var temp,
         leftChild  = this.leftChildIndex(i),
         rightChild = this.rightChildIndex(i),
         largest = i;
 
-    if (this.ar[leftChild]!=null && this.ar[leftChild] > this.ar[i]) {
+    if (this.ar[leftChild]!=null && this.ar[leftChild] > this.ar[largest]) {
         largest = leftChild;
     }
-    if (this.ar[rightChild]!=null && this.ar[rightChild] > this.ar[i]) {
+    if (this.ar[rightChild]!=null && this.ar[rightChild] > this.ar[largest]) {
         largest = rightChild;
     }
     // Swap
     if (largest != i) {
-        temp = this.ar[largest];
-        this.ar[largest] = this.ar[i];
-        this.ar[i] = temp;
+        this.swap(i, largest);
         this.heapify(largest);
     }
+};
+Heap.prototype.swap = function(i, j) {
+    var temp = this.ar[i];
+    this.ar[i] = this.ar[j];
+    this.ar[j] = temp;
 };
 Heap.prototype.parentIndex = function(n) {
     return Math.floor((n-1)/2);
@@ -494,6 +497,40 @@ Heap.prototype.leftChildIndex = function(n) {
 Heap.prototype.rightChildIndex = function(n) {
     return 2*n+2;
 };
+Heap.prototype.insert = function(val) {
+    this.ar.push(val);
+    this.bubbleUp(this.ar.length-1);
+};
+Heap.prototype.bubbleUp = function(i) {
+    var parent = this.parentIndex(i);
+    if (this.ar[parent] < this.ar[i]) {
+        this.swap(parent, i);
+        this.bubbleUp(parent);
+    }
+};
+Heap.prototype.peek = function() {
+    return this.ar.length > 0 ? this.ar[0] : null;
+};
+Heap.prototype.deleteRoot = function() {
+    var max;
+    this.swap(0,this.ar.length-1);
+    max = this.ar.pop();
+    this.bubbleDown(0);
+    return max;
+};
+Heap.prototype.size = function() {
+    return this.ar.length;
+};
+Heap.prototype.sort = function() {
+    var result = [];
+    while (this.ar.length > 0) {
+        result.push(this.deleteRoot());
+    }
+    return result.reverse();
+};
 
 var heap = new Heap([5,3,16,2,10,14]);
-console.log(heap.ar);
+heap.insert(15);
+heap.deleteRoot();
+
+console.log(heap.sort());
