@@ -450,3 +450,50 @@ avl.delete(8);
 
 console.log(avl.root);
 
+
+var Heap = function(_ar) {
+    this.ar = [];
+    if (_ar != null) {
+        this.ar = _ar;
+        this.build();
+    }
+};
+Heap.prototype.build = function() {
+    var lastParentIndex=this.parentIndex(this.ar.length-1),
+        i=lastParentIndex;
+    for (; i>=0; i-=1) {
+        this.heapify(i);
+    }
+};
+Heap.prototype.heapify = function(i) {
+    var temp,
+        leftChild  = this.leftChildIndex(i),
+        rightChild = this.rightChildIndex(i),
+        largest = i;
+
+    if (this.ar[leftChild]!=null && this.ar[leftChild] > this.ar[i]) {
+        largest = leftChild;
+    }
+    if (this.ar[rightChild]!=null && this.ar[rightChild] > this.ar[i]) {
+        largest = rightChild;
+    }
+    // Swap
+    if (largest != i) {
+        temp = this.ar[largest];
+        this.ar[largest] = this.ar[i];
+        this.ar[i] = temp;
+        this.heapify(largest);
+    }
+};
+Heap.prototype.parentIndex = function(n) {
+    return Math.floor((n-1)/2);
+};
+Heap.prototype.leftChildIndex = function(n) {
+    return 2*n+1;
+};
+Heap.prototype.rightChildIndex = function(n) {
+    return 2*n+2;
+};
+
+var heap = new Heap([5,3,16,2,10,14]);
+console.log(heap.ar);
