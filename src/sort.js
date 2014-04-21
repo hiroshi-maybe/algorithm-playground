@@ -35,8 +35,8 @@ console.log(ar);
 var merge_sort_immutable = function(ar) {
     var left, right, len = ar.length;
     if (len===1) { return ar; }
-    left = merge_sort(ar.slice(0,Math.ceil(len/2)));
-    right = merge_sort(ar.slice(Math.ceil(len/2)));
+    left = merge_sort_immutable(ar.slice(0,Math.ceil(len/2)));
+    right = merge_sort_immutable(ar.slice(Math.ceil(len/2)));
     return _merge_immutable(left,right);
 };
 
@@ -57,7 +57,7 @@ var _merge_immutable = function(l, r) {
 };
 
 ar = [8,2,6,3,4,3,9,1];
-console.log(merge_sort(ar));
+console.log(merge_sort_immutable(ar));
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
 // Quicksort:
@@ -120,7 +120,7 @@ var quick_sort_inplace_tailpivot = function(ar, s, e) {
 ar = [8,2,6,3,4,3,9,1];
 console.log(quick_sort_immutable(ar));
 ar = [8,2,6,3,4,3,9,1];
-quick_sort_tailpivot(ar, 0, ar.length);
+quick_sort_inplace_tailpivot(ar, 0, ar.length);
 console.log(ar);
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Handout_2.pdf
@@ -178,3 +178,30 @@ var neighbor = function(ar, k) {
 
 ar = [8,2,6,3,4,3,9,1];
 console.log(neighbor(ar, 2));
+
+// Counting sort: Applicable if value's distribution is limited up to k (bucket size)
+
+var counting_sort = function(ar) {
+    var i=0, j=0,
+        k=-Infinity,
+        bucket = ar.reduce(function(bucket, val) {
+            bucket[val] = bucket[val] || 0;
+            bucket[val] += 1;
+            if (val>k) { k=val; }
+            return bucket;
+        }, []);
+
+    for (; i<=k; i+=1) {
+        if (bucket[i] != null) {
+            while (bucket[i]>0) {
+                ar[j] = i;
+                bucket[i] -= 1;
+                j += 1;
+            }
+        }
+    }
+    return ar;
+};
+
+console.log(counting_sort([3,0,2,0,0,2,2]));
+
