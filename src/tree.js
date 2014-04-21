@@ -332,9 +332,7 @@ AVL.prototype.rebalance = function(cur) {
         // right > left
         balance_child = cur.right.balance();
         if (balance_child < 0) {
-            console.log("before",cur.right);
             cur = this.rotateLeft(cur.right).parent;
-            console.log("after",cur);
         }
         newParent = this.rotateRight(cur);
         this.rebalance(newParent.parent);
@@ -393,7 +391,6 @@ AVL.prototype._delete = function(node, k) {
     if (k===node.val) {
         if (node.left!=null && node.right!=null) {
             successor = this.successor(node);
-            console.log("successor",successor.val);
             node.val = successor.val;
             removed = successor;
         } else {
@@ -465,22 +462,23 @@ Heap.prototype.build = function() {
         this.heapify(i);
     }
 };
-Heap.prototype.heapify = Heap.prototype.bubbleDown = function(i) {
+Heap.prototype.heapify = Heap.prototype.bubbleDown = function(i, max) {
     var temp,
         leftChild  = this.leftChildIndex(i),
         rightChild = this.rightChildIndex(i),
         largest = i;
 
-    if (this.ar[leftChild]!=null && this.ar[leftChild] > this.ar[largest]) {
+    if (max == null) { max = this.ar.length-1; }
+
+    if (leftChild  <= max && this.ar[leftChild]!=null && this.ar[leftChild] > this.ar[largest]) {
         largest = leftChild;
     }
-    if (this.ar[rightChild]!=null && this.ar[rightChild] > this.ar[largest]) {
+    if (rightChild <= max && this.ar[rightChild]!=null && this.ar[rightChild] > this.ar[largest]) {
         largest = rightChild;
     }
-    // Swap
     if (largest != i) {
         this.swap(i, largest);
-        this.heapify(largest);
+        this.heapify(largest, max);
     }
 };
 Heap.prototype.swap = function(i, j) {
@@ -522,11 +520,16 @@ Heap.prototype.size = function() {
     return this.ar.length;
 };
 Heap.prototype.sort = function() {
-    var result = [];
-    while (this.ar.length > 0) {
-        result.push(this.deleteRoot());
+    var result, i=0, len=this.ar.length, last=len-1;
+    for (; i<last; i+=1) {
+        this.swap(0,len-i-1);
+        this.bubbleDown(0,len-i-2);
     }
-    return result.reverse();
+    result = this.ar;
+
+    // Clear because heap properties are not filled in the array
+    this.ar = [];
+    return result;
 };
 
 var heap = new Heap([5,3,16,2,10,14]);
