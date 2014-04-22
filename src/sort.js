@@ -253,4 +253,43 @@ var bucket_sort = function(ar) {
 
 console.log(bucket_sort([7,5,13,2,14,1,6]));
 
+// 2014/4/22 10:16-11:05
+var radix_sort_lsd = function(ar) {
+    var base = 10, buckets,
+        max, max_scale = 0, ar_i,
+        scale_i, exp_tmp = 1, exp;
+
+    max = Math.max.apply(null, ar);
+    
+    // Get max scale
+    while (Math.floor(max/exp_tmp) > 0 ) {
+        max_scale += 1;
+        exp_tmp*=base;
+    }
+
+    for (scale_i=0; scale_i<max_scale; scale_i+=1) {
+        /**  Bucket sort for each scale **/
+
+        exp = Math.pow(base, scale_i);
+
+        // Make bucket
+        buckets = ar.reduce(function(buckets, val) {
+            var bucket_n = Math.floor(val/exp) % base;
+            buckets[bucket_n] = buckets[bucket_n] || [];
+            buckets[bucket_n].push(val);
+            return buckets;
+        }, []);
+        ar_i = 0;
+        buckets.forEach(function(bucket) {
+            insertion_sort(bucket);
+            bucket.forEach(function(val) {
+                ar[ar_i] = val;
+                ar_i += 1
+            });
+        });
+    }
+    return ar;
+};
+
+console.log(radix_sort_lsd([170, 45, 75, 90, 802, 2, 24, 66]));
 
