@@ -170,3 +170,20 @@ console.log(one_edit_apart("cat", "cut"));
 console.log(one_edit_apart("cat", "cast"));
 console.log(one_edit_apart("cat", "at"));
 console.log(one_edit_apart("cat", "acts"));
+
+var exists_anagram = function(ar) {
+  var set={};
+  ar = ar.map(function(str) {
+    return str.split('').sort().join('');
+  });
+  return ar.reduce(function(acc, str) {
+    if (acc) return acc;
+    if (set[str]) return true;
+    set[str] = true;
+    return acc;
+  }, false);
+};
+
+console.log("Anagram exists?");
+console.log(exists_anagram(["bag", "bat", "tab"]));
+console.log(exists_anagram(["gab", "bat", "laf"]));
