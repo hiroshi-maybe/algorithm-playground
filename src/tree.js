@@ -313,7 +313,7 @@ AVL.prototype.rebalance = function(cur) {
     // Reached root. Finished.
     if (cur==null) { return; }
 
-    balance = cur.balance()
+    balance = cur.balance();
 
     if (Math.abs(balance) < 2) {
         this.rebalance(cur.parent);
@@ -537,3 +537,69 @@ heap.insert(15);
 heap.deleteRoot();
 
 console.log(heap.sort());
+
+var avl_med = new AVL();
+avl_med.insert(5);
+avl_med.insert(3);
+avl_med.insert(8);
+avl_med.insert(2);
+avl_med.insert(4);
+avl_med.insert(7);
+avl_med.insert(9);
+avl_med.insert(1);
+
+avl_med.delete(5);
+avl_med.delete(8);
+
+avl_med.insert(10);
+
+// Extract median from AVL tree
+// 2014/5/31 11:40-
+
+AvlNode.prototype.memoCount = function() {
+  var l, r;
+  if (this.count==null) {
+    l = (this.left  && this.left.memoCount())  || 0;
+    r = (this.right && this.right.memoCount()) || 0;
+    this.count = 1 + l + r;
+  }
+  // memorize  
+  return this.count;
+};
+
+AVL.prototype.median = function() {
+  var count, med_i_1, med_i_2, med_1, med_2;
+  if (this.root==null) return null;
+
+  this.root.memoCount();
+  count = this.root.count;
+  med_i_1 = Math.floor(count/2);
+  med_i_1 += count%2;
+
+  med_1 = this.root.kth(med_i_1);
+
+  if (count%2!=0) return med_1;
+
+  med_i_2 = med_i_1+1;
+  return (med_1 + this.root.kth(med_i_2))/2;
+};
+
+
+AvlNode.prototype.kth = function(k) {
+  var my_kth, l_count  = this.left && this.left.count || 0;
+  my_kth = l_count+1;
+  if (k==my_kth) return this.val;
+  
+  if (k < my_kth) {
+    // search left
+    if (this.left==null) return null;
+    return this.left.kth(k);
+  } else {
+    // search right
+    if (this.right==null) return null;
+    return this.right.kth(k-my_kth);
+  }
+};
+
+avl_med.root.memoCount();
+console.log(avl_med.median());
