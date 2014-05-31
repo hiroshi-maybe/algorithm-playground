@@ -6,8 +6,8 @@ var bsearch_rec = function(a, i) {
   var len = a.length,
       mid_i = Math.floor(len/2),
       mid = a[mid_i];
-  if (mid===i) { return true; }
-  if (len < 1) { return false; }
+  if (mid===i) { return mid; }
+  if (len < 1) { return -1; }
   if (mid<i) {
     return bsearch(a.slice(mid_i+1), i);
   } else {
