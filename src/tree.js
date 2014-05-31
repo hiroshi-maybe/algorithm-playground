@@ -539,19 +539,15 @@ heap.deleteRoot();
 console.log(heap.sort());
 
 var avl_med = new AVL();
-avl_med.insert(5);
-avl_med.insert(3);
-avl_med.insert(8);
 avl_med.insert(2);
-avl_med.insert(4);
 avl_med.insert(7);
+avl_med.insert(4);
 avl_med.insert(9);
 avl_med.insert(1);
-
-avl_med.delete(5);
-avl_med.delete(8);
-
-avl_med.insert(10);
+avl_med.insert(5);
+avl_med.insert(8);
+avl_med.insert(3);
+avl_med.insert(6);
 
 // Extract median from AVL tree
 // 2014/5/31 11:40-
@@ -603,3 +599,4 @@ AvlNode.prototype.kth = function(k) {
 
 avl_med.root.memoCount();
 console.log(avl_med.median());
+
