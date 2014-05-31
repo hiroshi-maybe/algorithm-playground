@@ -34,7 +34,7 @@ var reverse_word_1liner = function(str) {
 
 var reverse_word_2phase_reverse = function(ar) {
     var i=0, len=ar.length, word_len=0;
-    ar = reverse_array(ar);
+    ar = reverse_array_simple(ar);
     for (; i<len; i+=1) {
         if (ar[i]===" ") {
             reverse_str(ar, i-word_len, i-1);
@@ -145,3 +145,28 @@ var word_distance = function(a, b, str) {
 };
 
 console.log(word_distance("ab", "bc", " xx  bc yy zz ab xx"));
+
+var one_edit_apart = function(str1, str2) {
+  var temp, i, sub1l, sub1r, sub2l, sub2r;
+  if (str1.length<str2.length) { temp=str1; str1=str2; str2=temp; }
+  if (str1.length-str2.length>2) return false;
+
+  for (i=0; i<str1.length; i+=1) {
+    // Add/Remove check
+    sub1l = str1.substring(0,i);
+    sub1r = str1.substring(i+1,str1.length);
+    if (sub1l+sub1r==str2) return true;
+    // Replace check
+    sub2l = str2.substring(0,i);
+    sub2r = str2.substring(i+1,str2.length);
+    if (sub1l+sub1r==sub2l+sub2r) return true;
+  }
+  return false;
+};
+
+console.log(one_edit_apart("cat", "dog"));
+console.log(one_edit_apart("cat", "cats"));
+console.log(one_edit_apart("cat", "cut"));
+console.log(one_edit_apart("cat", "cast"));
+console.log(one_edit_apart("cat", "at"));
+console.log(one_edit_apart("cat", "acts"));
