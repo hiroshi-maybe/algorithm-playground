@@ -63,7 +63,7 @@ var find_odd_xor = function(ar) {
 };
 
 var ar2 = [0,9,5,7,9,2,3,5,0,2,3];
-console.log(find_odd_(ar2));
+console.log(find_odd_hash(ar2));
 
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Maximal Subarray 18:44-19:25
@@ -100,7 +100,7 @@ var max_subarray = function(ar) {
 
 var ar = [1, -3, 5, -2, 9, -8, -6, 4];
 
-console.log(max_subarray_(ar));
+console.log(max_subarray(ar));
 
 //ar2 = [-1, -3, -5, -2, -9, -8, -6, -4];
 //console.log(max_subarray(ar2));
@@ -174,3 +174,28 @@ var has_zero_sum = function(ar) {
     return false;
 };
 console.log(has_zero_sum([-3, 2, 3, 1, 6]));
+
+var merge_arrays = function(ars) {
+  return ars.reduce(function(acc, array) {
+    return _merge(array, acc);
+  }, []);
+};
+var _merge = function(ar1, ar2) {
+  var result = [], l_i=0, r_i=0, left, right, l_len=ar1.length, r_len=ar2.length;
+  while(l_i<l_len || r_i<r_len) {
+    left  = ar1[l_i] || Number.MAX_VALUE;
+    right = ar2[r_i] || Number.MAX_VALUE;
+    if (left<=right) {
+      result.push(ar1[l_i]); l_i+=1;
+    } else {
+      result.push(ar2[r_i]); r_i+=1;
+    }
+  }
+  return result;
+};
+
+console.log(merge_arrays([
+  [2, 5, 10], 
+  [25, 100, 105], 
+  [7, 56, 42]
+]));
