@@ -62,7 +62,7 @@ var reverse_recursive = function(cur, next) {
     if (cur===head) { cur.next = null; }
     next = temp.next;
     temp.next = cur;
-    reverse_(temp, next);
+    reverse_recursive(temp, next);
 };
 
 insertAfter(index[4], {data: 50, next:null});
@@ -70,4 +70,51 @@ print();
 removeAfter(index[4]);
 print();
 reverse_recursive(head, head.next);
+print();
+
+var flatten = function(node, prev, stack) {
+  var data;
+console.log(prev&&prev.data, node&&node.data);
+  if (node==null) {
+    // append from stack
+    if (stack.length==0) return;
+    data = stack.pop();
+    prev.next = data;
+    flatten(data, prev, stack);
+    return;
+  }
+  if (stack==null) stack = [];
+  data = node.data;
+  if (typeof data == "number") {
+    flatten(node.next, node, stack);
+    return;
+  }
+  // branch node
+  prev.next = data;
+  if (node.next!=null) stack.push(node.next);
+  flatten(data, prev, stack);
+};
+
+var insert = function(head) {
+  var Insertable = function(data) {
+	var head = {data:data, next:null};
+	this.head=head;
+	this.cur=head;
+      };
+  Insertable.prototype.next = function(data) {
+    this.cur.next = {data: data, next: null};
+    this.cur = this.cur.next;
+    return this;
+  };
+  return new Insertable(head);
+};
+var temp4 = insert(40).head,
+    temp31 = insert(temp4).head,
+    temp32 = insert(30).head,
+    temp2 = insert(20).next(temp31).next(21).next(temp32).next(22).head,
+    temp1 = insert(10).next(temp2).next(11).next(12).head;
+    
+head = insert(0).next(1).next(temp1).next(2).next(3).head;
+
+flatten(head);
 print();
