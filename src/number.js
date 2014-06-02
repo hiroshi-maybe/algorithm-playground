@@ -248,3 +248,16 @@ arbitrary_mult_ll(
   {val:7, next: {val:8, next: null}}
 );
 
+var inplace_map = function(ar) {
+  var i, len=ar.length, org;
+  for (i=0; i<len; i+=1) {
+    org = ar[ar[i]] % len;
+    ar[i] += org*len;
+  }
+  for (i=0; i<len; i+=1) {
+    ar[i] = Math.floor(ar[i]/len);
+  }
+  return ar;
+};
+
+console.log(inplace_map([2,3,1,0]));
