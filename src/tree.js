@@ -600,3 +600,22 @@ AvlNode.prototype.kth = function(k) {
 avl_med.root.memoCount();
 console.log(avl_med.median());
 
+var print_dfs_path = function(node, path) {
+  if (node==null) return;
+  path = path==null ? [] : path.slice();
+  path.push(node.val);
+  if (node.left) {
+    print_dfs_path(node.left, path);
+  }
+  if (node.right) {
+    print_dfs_path(node.right, path);    
+  }
+  if (node.left==null && node.right==null) {
+    // leaf
+    console.log(path);
+  }
+};
+
+console.log("bfs path");
+print_dfs_path(head);
+

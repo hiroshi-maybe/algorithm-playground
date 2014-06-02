@@ -199,3 +199,52 @@ console.log(merge_arrays([
   [25, 100, 105], 
   [7, 56, 42]
 ]));
+
+var arbitrary_mult_ll = function(l1, l2) {
+  var carrier, head={ val: 0, next: null, prev: null }, base=head, c1=l1, c2=l2, cr, c2_h=c2, tail;
+  while (c1 != null) {
+    cr = base;
+    while(c2 != null) {
+      cr.val += c1.val * c2.val;
+      c2 = c2.next;
+      if (c2 != null) {
+	cr.next = cr.next || { val: 0, next: null, prev: cr };
+	cr = cr.next;
+      }
+      tail = cr;
+    }
+    c1 = c1.next;
+    c2 = c2_h;
+    if (c1 != null) {
+      base.next = base.next || { val: 0, next: null, prev: base };
+      base = base.next;
+    }
+  }
+  // Handle carrier
+  cr = tail;
+  while (cr != null) {
+    carrier = Math.floor(cr.val / 10);
+    cr.val = cr.val % 10;
+    if (carrier>0) {
+      cr.prev = cr.prev || { val: 0, next: cr, prev: null };
+      cr.prev.val += carrier;
+    }
+    cr = cr.prev;
+  }
+  head = head.prev || head;
+
+  // Print
+  var ret="";
+  cr = head;
+  while (cr != null) {
+    ret += cr.val;
+    cr = cr.next;
+  }
+  console.log(ret);
+};
+
+arbitrary_mult_ll(
+  {val:4, next: {val:5, next: {val: 6, next:null}}},
+  {val:7, next: {val:8, next: null}}
+);
+
