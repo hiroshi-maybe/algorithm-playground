@@ -187,3 +187,16 @@ var exists_anagram = function(ar) {
 console.log("Anagram exists?");
 console.log(exists_anagram(["bag", "bat", "tab"]));
 console.log(exists_anagram(["gab", "bat", "laf"]));
+
+var is_all_unique = function(str) {
+  var i=0, len=str.length, checker=0, val, base = "a".charCodeAt(0);
+  for (; i<len; i+=1) {
+    val = str.charCodeAt(i)-base;
+    if ((checker & (1 << val)) > 0) return false;
+    checker |= (1 << val);
+  }
+  return true;
+};
+
+console.log("is all unique?");
+console.log(is_all_unique("aba"));
