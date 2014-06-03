@@ -155,5 +155,20 @@ var remove_duplicate_no_buffer = function(node) {
 };
 
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
-remove_duplicate_no_buffer(head);
+remove_duplicate(head);
 print();
+
+var last_nth = function(head, n) {
+  var p1 = head, p2 = head, i;
+  for (i=0; i<n-1; i+=1) {
+    p2 = p2.next;
+  }
+  while (p2.next != null) {
+    p2 = p2.next;
+    p1 = p1.next;
+  }
+  return p1;
+};
+head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
+
+console.log(last_nth(head, 5));
