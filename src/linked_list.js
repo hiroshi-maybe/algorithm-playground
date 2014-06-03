@@ -118,3 +118,21 @@ head = insert(0).next(1).next(temp1).next(2).next(3).head;
 
 flatten(head);
 print();
+
+var remove_duplicate = function(node, prev, set) {
+  set = set || {};
+  if (node==null) return;
+
+  if (set[node.data]) {
+    // Duplicate
+    prev.next = node.next;
+    remove_duplicate(node.next, prev, set);
+  } else {
+    set[node.data] = true;
+    remove_duplicate(node.next, node, set);
+  }
+};
+
+head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
+remove_duplicate(head);
+print();
