@@ -28,3 +28,25 @@ console.log(largest_dimension([
   [1,1,0,0,0],
   [1,1,1,1,0]
 ]));
+
+var rotate = function(matrix) {
+  var temp, head, tail, offset, outer, offset, len = matrix.length;
+  for (outer=0; outer<len/2; outer+=1) {
+    for (offset=0; offset<len-outer*2-1; offset+=1) {
+      temp = matrix[outer+offset][outer];
+      matrix[outer+offset][outer] = matrix[outer][len-outer-offset-1];
+      matrix[outer][len-outer-offset-1] = matrix[len-outer-offset-1][len-outer-1];
+      matrix[len-outer-offset-1][len-outer-1] = matrix[len-outer-1][outer+offset];
+      matrix[len-outer-1][outer+offset] = temp;
+    }
+  }
+  return matrix;
+};
+
+console.log(rotate([
+  [1,2,3,4,5],
+  [11,12,13,14,15],
+  [21,22,23,24,25],
+  [31,32,33,34,35],
+  [41,42,43,44,45]
+]));
