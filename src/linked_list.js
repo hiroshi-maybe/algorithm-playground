@@ -133,6 +133,27 @@ var remove_duplicate = function(node, prev, set) {
   }
 };
 
+var remove_duplicate_no_buffer = function(node) {
+  var cur=node, data, checking, checking_prev;
+
+  while (cur != null) {
+    data = cur.data;
+    checking = cur.next;
+    checking_prev = cur;
+    while (checking != null) {
+      if (checking.data==data) {
+	// remove
+	checking_prev.next = checking.next;
+	checking = checking.next;
+	continue;
+      }
+      checking_prev = checking;
+      checking = checking.next;
+    }
+    cur = cur.next;
+  }
+};
+
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
-remove_duplicate(head);
+remove_duplicate_no_buffer(head);
 print();
