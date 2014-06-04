@@ -619,3 +619,35 @@ var print_dfs_path = function(node, path) {
 console.log("bfs path");
 print_dfs_path(head);
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 4.1
+
+var is_balanced = function(root) {
+  function max_depth(node, depth) {
+    var left, right;
+    depth = depth || 0;
+    if (node==null) return depth;
+    return Math.max(max_depth(node.left, depth+1), max_depth(node.right, depth+1));
+  }
+  function min_depth(node, depth) {
+    var left, right;
+    depth = depth || 0;
+    if (node==null) return depth;
+    return Math.min(min_depth(node.left, depth+1), min_depth(node.right, depth+1));
+  }
+  return max_depth(root)-min_depth(root)<2;
+};
+
+head = {val:0,
+        left : { val: 1,
+          left : {val:3,
+            left: {val:6}},
+          right: {val:4,
+            left : {val:7},
+            right: {val:8}}},
+        right: { val: 2,
+          left : {val: 1},
+          right: {val: 5}}};
+
+console.log(is_balanced(head));
+
