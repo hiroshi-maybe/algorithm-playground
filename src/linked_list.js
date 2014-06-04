@@ -213,3 +213,30 @@ op1 = insert(3).next(1).next(7).head;
 op2 = insert(5).next(9).next(2).head;
 
 print(add(op1,op2));
+
+var loop_start = function(head) {
+  var p1=head, p2=head;
+  while (p2.next!=null) {
+    p1 = p1.next;
+    p2 = p2.next;
+    if (p2==null) return null;
+    p2 = p2.next;
+    if (p1===p2) break;
+  }
+  if (p2==null) return null;
+  
+  // p2: loop start - k on the loop
+  // p1: Move back to start (loop start - k as well)
+  p1 = head;
+  while (p1!==p2) {
+    p1 = p1.next;
+    p2 = p2.next;
+  }
+  return p1;
+};
+
+var loop_start_node = {data: 4, next: null};
+head = {data:1, next: {data:2, next: {data:3, next: loop_start_node}}};
+loop_start_node.next = {data:5, next: {data:6, next: {data:7, next: {data:8, next: {data:9, next: {data:10, next: {data: 11, next: loop_start_node}}}}}}};
+
+console.log(loop_start(head));
