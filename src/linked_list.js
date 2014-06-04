@@ -188,3 +188,28 @@ var remove_middle = function(head) {
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
 remove_middle(head);
 print(head);
+
+var add = function(n1, n2) {
+  var result = {}, carrier = 0, head = result;
+  while (n1!=null || n2!=null) {
+    result.data = n1.data+n2.data+carrier;
+    carrier = Math.floor(result.data/10);
+    result.data = result.data % 10;
+    if (n1!=null) n1 = n1.next;
+    if (n2!=null) n2 = n2.next;
+    if (n1!=null || n2!=null) {
+      result.next = { data: 0, next: null };
+      result = result.next;
+    }
+  }
+  if (carrier>0) {
+    result.next = { data: carrier, next: null };
+  }
+
+  return head;
+};
+
+op1 = insert(3).next(1).next(7).head;
+op2 = insert(5).next(9).next(2).head;
+
+print(add(op1,op2));
