@@ -81,3 +81,20 @@ var tower_of_hanoi = function() {
 };
 
 tower_of_hanoi();
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 3.6
+
+var sort_stack = function(stack) {
+  var val, target = [];
+  while (stack.length>0) {
+    val = stack.pop();
+    while (target.length>0 && target[target.length-1]>val) {
+      stack.push(target.pop());
+    }
+    target.push(val);
+  }
+  return target;
+};
+
+console.log(sort_stack([2,4,1,5,3]));
