@@ -1,29 +1,40 @@
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 3.5
 // http://courses.csail.mit.edu/iap/interview/Hacking_a_Google_Interview_Practice_Questions_Person_B.pdf
 // Question: Queue Using Stacks 2014/4/13 16:49-16:52
 
-var stack_en = [],
-	stack_de = [];
-
-var enqueue = function(v) {
-	while (stack_de.length!=0) {
-		stack_en.push(stack_de.pop);
-	}
-	stack_en.push(v);
+var MyQueue = function() {
+  this.stack_en = [];
+  this.stack_de = [];
 };
 
-var dequeue = function() {
-	while (stack_en.length!=0) {
-		stack_de.push(stack_en.pop());
-	}
-	return stack_de.pop();
-}
+MyQueue.prototype.enqueue = function(val) {
+  if (this.stack_de.length>0) {
+    while(this.stack_de.length>0) {
+      this.stack_en.push(this.stack_de.pop());
+    }
+  }
+  this.stack_en.push(val);
+};
+MyQueue.prototype.dequeue = function() {
+  while(this.stack_en.length>0) {
+    this.stack_de.push(this.stack_en.pop());
+  }
+  return this.stack_de.pop();
+};
 
-enqueue(1);
-enqueue(2);
-enqueue(3);
-console.log(dequeue(), stack_en, stack_de);
+var myQueue = new MyQueue();
+myQueue.enqueue(1);
+myQueue.enqueue(1);
+myQueue.dequeue();
+myQueue.enqueue(2);
+myQueue.enqueue(2);
+myQueue.dequeue();
+myQueue.enqueue(3);
+console.log(myQueue.dequeue(),myQueue.dequeue(),myQueue.dequeue(),myQueue.dequeue());
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
 // Stack having min value
 
 var MinStack = function() {
@@ -54,6 +65,8 @@ minStack.push(3);
 minStack.push(3);
 minStack.pop();
 console.log(minStack.min());
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
 
 var tower_of_hanoi = function() {
   var start = [4,3,2,1], buffer=[], target = [];
