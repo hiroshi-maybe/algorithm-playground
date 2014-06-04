@@ -172,3 +172,18 @@ var last_nth = function(head, n) {
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
 
 console.log(last_nth(head, 5));
+
+var remove_middle = function(head) {
+  var p1 = head, p2 = head, prev;
+  while (p2!=null && p2.next!=null) {
+    prev = p1;
+    p1 = p1.next;
+    p2 = p2.next;
+    if (p2 != null && p2.next != null) p2 = p2.next;
+  }
+  prev.next = p1.next;
+};
+
+head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
+remove_middle(head);
+print();
