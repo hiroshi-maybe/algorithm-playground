@@ -23,3 +23,36 @@ enqueue(1);
 enqueue(2);
 enqueue(3);
 console.log(dequeue(), stack_en, stack_de);
+
+// Stack having min value
+
+var MinStack = function() {
+  this.vals = [];
+  this.mins = [];
+};
+MinStack.prototype.push = function(val) {
+  if (this.mins.length==0 || val<=this.mins[this.mins.length-1]) {
+    this.mins.push(val);
+  }
+  this.vals.push(val);
+};
+MinStack.prototype.pop = function() {
+  var val = this.vals.pop();
+  if (val==this.mins[this.mins.length-1]) {
+    this.mins.pop();
+  }
+  return val;
+};
+MinStack.prototype.min = function() {
+  return this.mins[this.mins.length-1];
+};
+
+var minStack = new MinStack();
+minStack.push(10);
+minStack.push(5);
+minStack.push(3);
+minStack.push(3);
+minStack.pop();
+console.log(minStack.min());
+
+
