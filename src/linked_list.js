@@ -1,12 +1,37 @@
+// Helper to create linked list
+var insert = function(head) {
+  var Insertable = function(data) {
+	var head = {data:data, next:null};
+	this.head=head;
+	this.cur=head;
+      };
+  Insertable.prototype.next = function(data) {
+    this.cur.next = {data: data, next: null};
+    this.cur = this.cur.next;
+    return this;
+  };
+  return new Insertable(head);
+};
+
+var print = function (head) {
+    var current, ar = [];
+    current = head;
+    while(current!==null) {
+        ar.push(current.data);
+        current = current.next;
+    }
+    console.log(ar.join("->"));
+};
+
 // 2014/4/11 1:04-2:24
 
 var head;
 var index = [];
 for (var i=0; i<10; i+=1) {
-    index[i] = {
-      data: i,
-      next: null
-    };
+  index[i] = {
+    data: i,
+    next: null
+  };
 }
 
 index.forEach(function(node,i) {
@@ -17,17 +42,7 @@ index.forEach(function(node,i) {
 
 head = index[0];
 
-var print = function () {
-    var current, ar = [];
-    current = head;
-    while(current!==null) {
-        ar.push(current.data);
-        current = current.next;
-    }
-    console.log(ar.join("->"));
-};
-
-print();
+print(head);
 
 var insertAfter = function(node, newNode) {
     var temp = node.next;
@@ -66,15 +81,14 @@ var reverse_recursive = function(cur, next) {
 };
 
 insertAfter(index[4], {data: 50, next:null});
-print();
+print(head);
 removeAfter(index[4]);
-print();
+print(head);
 reverse_recursive(head, head.next);
-print();
+print(head);
 
 var flatten = function(node, prev, stack) {
   var data;
-console.log(prev&&prev.data, node&&node.data);
   if (node==null) {
     // append from stack
     if (stack.length==0) return;
@@ -95,19 +109,6 @@ console.log(prev&&prev.data, node&&node.data);
   flatten(data, prev, stack);
 };
 
-var insert = function(head) {
-  var Insertable = function(data) {
-	var head = {data:data, next:null};
-	this.head=head;
-	this.cur=head;
-      };
-  Insertable.prototype.next = function(data) {
-    this.cur.next = {data: data, next: null};
-    this.cur = this.cur.next;
-    return this;
-  };
-  return new Insertable(head);
-};
 var temp4 = insert(40).head,
     temp31 = insert(temp4).head,
     temp32 = insert(30).head,
@@ -117,7 +118,7 @@ var temp4 = insert(40).head,
 head = insert(0).next(1).next(temp1).next(2).next(3).head;
 
 flatten(head);
-print();
+print(head);
 
 var remove_duplicate = function(node, prev, set) {
   set = set || {};
@@ -156,7 +157,7 @@ var remove_duplicate_no_buffer = function(node) {
 
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
 remove_duplicate(head);
-print();
+print(head);
 
 var last_nth = function(head, n) {
   var p1 = head, p2 = head, i;
@@ -186,4 +187,4 @@ var remove_middle = function(head) {
 
 head = insert(3).next(1).next(2).next(5).next(3).next(5).next(3).head;
 remove_middle(head);
-print();
+print(head);
