@@ -55,4 +55,16 @@ minStack.push(3);
 minStack.pop();
 console.log(minStack.min());
 
+var tower_of_hanoi = function() {
+  var start = [4,3,2,1], buffer=[], target = [];
+  function move(n, src, dest, buf) {
+    if (n<1) return;
+    move(n-1, src, buf, dest);
+    dest.push(src.pop());
+    console.log(start,buffer,target);
+    move(n-1, buf, dest, src);
+  }
+  move(start.length, start, target, buffer);
+};
 
+tower_of_hanoi();
