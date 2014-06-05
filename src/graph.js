@@ -65,3 +65,47 @@ function dijkstra(start, graph) {
 };
 
 console.log(dijkstra("1", graph2));
+
+graph2 = {
+	vertex: ["1","2","3","4","5","6"],
+	edge: [,
+	/* vertex1, vertex2, weight */
+		["1", "2", 7],
+		["1", "3", 9],
+		["1", "6", 14],
+		["2", "3", 10],
+		["2", "4", 15],
+		["3", "4", 11],
+		["3", "6", 2],
+		["4", "5", 6],
+		["5", "6", 9]
+	]
+};
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 4.2
+function has_path(graph, start, end) {
+  var cur = start, buf = [], visited = {}, paths = graph.edge.reduce(function(set, e){
+    set[e[0]] = set[e[0]] || [];
+    set[e[0]].push(e);
+    return set;
+  }, {});
+  buf.push(cur);
+  while (buf.length>0 && Object.keys(visited).length<graph.vertex.length) {
+    cur = buf.pop();
+    if (cur==end) return true;
+    // Mark visited
+    visited[cur] = true;
+    if (paths[cur]==null) continue;
+    buf = buf.concat(paths[cur].filter(function(edge) {
+      return visited[edge[1]] == null;
+    }).map(function(edge) {
+      return edge[1];
+    }));
+        console.log(buf);
+  }
+  return false;
+}
+
+console.log(has_path(graph2, 3, 2));
+
