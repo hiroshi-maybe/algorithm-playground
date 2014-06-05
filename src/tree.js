@@ -698,3 +698,32 @@ var depth_linked_list = function(root) {
 };
 
 console.log(depth_linked_list(head));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 4.5
+
+var inorder_successor = function(node) {
+  var parent, child;
+  // has right child
+  if (node.right !=null) {
+    // find left most
+    child = node.right;
+    while (child.left!=null) {
+      child = child.left;
+    }
+    return child;
+  }
+  // has no right child, it's left child
+  if (node.parent !=null && node.parent.left == node) return node.parent;
+  // has no right child, it's right child
+  if (node.parent != null && node.parent.right == node) {
+    // first left child
+    parent = node.parent;
+    while (parent.parent!=null) {
+      if (parent.parent.left == parent) return parent.parent;
+      parent = parent.parent;
+    }
+  }
+  return null;
+};
+
