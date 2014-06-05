@@ -651,3 +651,21 @@ head = {val:0,
 
 console.log(is_balanced(head));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 4.3
+
+var make_balanced_tree = function(sorted_ar, start, end) {
+  var node, mid_i;
+  if (start===void 0) start = 0;
+  if (end  ===void 0) end = sorted_ar.length-1;
+  mid_i = start+Math.floor((end-start)/2);
+  if (end<start) return null;
+
+  node = {val: sorted_ar[mid_i]};
+  node.left = make_balanced_tree(sorted_ar, start, mid_i-1);
+  node.right = make_balanced_tree(sorted_ar, mid_i+1, end);
+  
+  return node;
+};
+
+console.log(make_balanced_tree([0,1,2,3,4,5,6]));
