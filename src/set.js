@@ -26,3 +26,21 @@ var phone_word = function(nums) {
 };
 
 console.log(phone_word([2,3,4]));
+
+var subset = function(set, my) {
+  var right_set = [], i, len, my_set, tmp;
+  if (my==null) my = 0;
+  my_set = [[set[my]]];
+  
+  if (my == set.length-1) return my_set;
+  right_set = subset(set, my+1);
+  if (right_set.length>0) my_set = my_set.concat(right_set);
+  for (i=0,len=right_set.length; i<len; i+=1) {
+    tmp = right_set[i].slice();
+    tmp.push(set[my]);
+    my_set.push(tmp);
+  }
+  return my_set;
+};
+
+console.log(subset([0,1,2]));
