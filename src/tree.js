@@ -669,3 +669,32 @@ var make_balanced_tree = function(sorted_ar, start, end) {
 };
 
 console.log(make_balanced_tree([0,1,2,3,4,5,6]));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 4.4
+
+var depth_linked_list = function(root) {
+  var queue = [root], children = [], lists = [], node, i, len, prev, head;
+  lists.push({data: root.val});
+  while (queue.length>0) {
+    node = queue.shift();
+    if (node.left !=null) children.push(node.left);
+    if (node.right!=null) children.push(node.right);
+
+    if (queue.length==0) {
+      queue = children;
+      children = [];
+      if (queue.length<1) continue;
+      // Make linked list
+      head = prev = {data: queue[0].val};
+      for (i=1, len=queue.length; i<len; i+=1) {
+	prev.next = {data: queue[i].val};
+	prev = prev.next;
+      }
+      lists.push(head);
+    }
+  }
+  return lists;
+};
+
+console.log(depth_linked_list(head));
