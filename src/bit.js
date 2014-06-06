@@ -42,3 +42,17 @@ function to_binary(n) {
 };
 
 console.log(to_binary(100.35));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 5.5
+
+function convertion_bit_count(a, b) {
+  var diff = a ^ b, count = 0;
+  while (diff > 0) {
+    count += diff & 1;
+    diff >>= 1;
+  }
+  return count;
+}
+
+console.log(convertion_bit_count(31,14));
