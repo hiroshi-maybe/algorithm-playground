@@ -60,3 +60,44 @@ var permutation = function(set) {
 };
 
 console.log(permutation([1,2,3]));
+
+var combination = function(set, n) {
+  return subset(set).filter(function(xs) {
+    return xs.length==n;
+  });
+};
+
+console.log(combination([1,2,3], 2));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 8.5
+
+var print_parenthesis = function(count) {
+  var nums, num_comb = function(n) {
+    var i, j, len, comb = [], subset;
+    if (n==0) return [[]];
+    for (i=1; i<=n; i+=1) {
+      subset = num_comb(n-i);
+      for (j=0, len=subset.length; j<len; j+=1) {
+	comb.push([i].concat(subset[j]));
+      }
+    }
+    return comb;
+  },
+  times = function(ch, n) {
+    var str = "";
+    for (; n>0; n-=1) {
+      str+=ch;
+    }
+    return str;
+  };
+  nums = num_comb(count);
+  return nums.map(function(xs) {
+    return xs.reduce(function(acc, n) {
+      return acc+times("(",n)+times(")",n);
+    }, "");
+  });
+};
+
+console.log(print_parenthesis(3));
+
