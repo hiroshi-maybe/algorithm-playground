@@ -71,3 +71,56 @@ var matrix = [
 ];
 region_fill(matrix, 2, 2, 1);
 console.log(matrix);
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 8.8
+
+var copy = function(matrix) {
+  return matrix.map(function(row) {
+    return row.slice();
+  });
+};
+
+var can_put = function(matrix, y, x) {
+  var row, col, diagonal, n = matrix.length;
+  for (row=0; row<y; row+=1) {
+    // Same column occupied
+    if (matrix[row][x]==1) return false;
+    // Left diagonal
+    diagonal = matrix[row][x-(y-row)];
+    if (diagonal!=null && diagonal==1) return false;
+    // right diagonal
+    diagonal = matrix[row][x+(y-row)];
+    if (diagonal!=null && diagonal==1) return false;
+  }
+  return true;
+};
+
+var _n_queen = function(matrix, row) {
+  var matrix_new, col=0, n=matrix.length;
+  if (row >= n) {
+    console.log(matrix);
+    return;
+  }
+  for (; col<n; col+=1) {
+    if (can_put(matrix, row, col)) {
+      matrix_new = copy(matrix);
+//      console.log("d",n,row,col,matrix_new);
+      matrix_new[row][col] = 1;
+      _n_queen(matrix_new, row+1);
+    }
+  }
+};
+var n_queen = function(n) {
+  var i, j, matrix=[];
+  for (i=0; i<n; i+=1) {
+    matrix.push([]);
+    for (j=0; j<n; j+=1) {
+      matrix[i].push(0);
+    }
+  }
+  _n_queen(matrix, 0);
+};
+
+n_queen(8);
+console.log(c);
