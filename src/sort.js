@@ -293,3 +293,23 @@ var radix_sort_lsd = function(ar) {
 
 console.log(radix_sort_lsd([170, 45, 75, 90, 802, 2, 24, 66]));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 9.7
+
+var subset_compound_condition = function(ar) {
+  var ar1 = ar.slice().sort(function(a,b) { return a[0]-b[0]; }),
+      ar2 = ar.slice().sort(function(a,b) { return a[1]-b[1]; }),
+      el1, el2, result = [];
+
+  el1 = ar1.shift();
+  el2 = ar2.shift();
+
+  while (el1===el2 && el1!=null) {
+    result.push(el1);
+    el1 = ar1.shift();
+    el2 = ar2.shift();
+  } 
+  return result;
+};
+
+console.log(subset_compound_condition([[65,100],[70,150],[56,90],[75,190],[60,95],[68,110]]));
