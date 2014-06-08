@@ -261,3 +261,28 @@ var inplace_map = function(ar) {
 };
 
 console.log(inplace_map([2,3,1,0]));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 6.1 
+// Just check if there is a combination of arithmetic operator
+var infer_arithmetic_operator = function(ar, target) {
+  var candidate = [target], n = ar.pop(), idx, flatten = function(ar) {
+    var i=0, len=ar.length, flattened = [];
+    for (; i<len; i+=1) {
+      flattened = flattened.concat(ar[i]);
+    }
+    return flattened;
+  };
+  //  3 1 3 6 = 8 | 3 1 3 = [8/6 8*6 8-6 8+6]
+  while (ar.length>0) {
+    candidate = candidate.map(function(m) {
+      return [m/n, m*n, m-n, m+n];
+    });
+    candidate = flatten(candidate);
+    n = ar.pop();
+  }
+  return candidate.indexOf(n);
+};
+
+console.log(infer_arithmetic_operator([3,1,3,6], 8));
+
