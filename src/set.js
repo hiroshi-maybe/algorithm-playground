@@ -101,3 +101,21 @@ var print_parenthesis = function(count) {
 
 console.log(print_parenthesis(3));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 8.7
+
+var coin_combination = function(coins, target) {
+  var next_target=target, coins = coins.slice(), coin, num=0, result=0;
+  if (target<0)  return 0;
+  if (target==0) return 1;
+  if (coins.length==0) return 0;
+  coin = coins.shift();
+  while (next_target>=0) {
+    next_target = target-coin*num;
+    result += coin_combination(coins, next_target);
+    num+=1;
+  }
+  return result;
+};
+
+console.log(coin_combination([1,5,10,25].sort(function (a,b) { return b-a; }), 15));
