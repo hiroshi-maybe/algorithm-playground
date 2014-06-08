@@ -50,3 +50,24 @@ console.log(rotate([
   [31,32,33,34,35],
   [41,42,43,44,45]
 ]));
+
+var region_fill = function(matrix, x, y, color) {
+  var chk = function(_x,_y,_c) {
+    return matrix[_y]!=null && matrix[_y][_x]!=null && matrix[_y][_x]!=_c;
+  };
+  matrix[y][x] = color;
+  chk(x-1,y,color) && region_fill(matrix, x-1,y, color);
+  chk(x,y+1,color) && region_fill(matrix, x,y+1, color);
+  chk(x+1,y,color) && region_fill(matrix, x+1,y, color);
+  chk(x,y-1,color) && region_fill(matrix, x,y-1, color);
+};
+
+var matrix = [
+  [1,1,0,1,1],
+  [0,1,0,0,1],
+  [1,0,0,0,1],
+  [1,1,0,1,1],
+  [0,0,1,0,0]
+];
+region_fill(matrix, 2, 2, 1);
+console.log(matrix);
