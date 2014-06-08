@@ -44,3 +44,19 @@ var subset = function(set, my) {
 };
 
 console.log(subset([0,1,2]));
+
+var permutation = function(set) {
+  var subset, perm, i, len_i, j, len_j, new_set = [], my;
+  if (set.length==1) return [[set[0]]];
+  perm = permutation(set.slice(1, set.length));
+  my = set.slice(0, 1);
+  for (i=0, len_i=perm.length; i<len_i; i+=1) {
+    subset = perm[i];
+    for (j=0, len_j=subset.length; j<=len_j; j+=1) {
+      new_set.push(subset.slice(0,j).concat(my).concat(subset.slice(j,len_j)));
+    }
+  }
+  return new_set;
+};
+
+console.log(permutation([1,2,3]));
