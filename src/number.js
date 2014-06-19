@@ -286,3 +286,50 @@ var infer_arithmetic_operator = function(ar, target) {
 
 console.log(infer_arithmetic_operator([3,1,3,6], 8));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 19.6
+var to_en_phrase = function(n) {
+  var dic = {
+        "0" : "zero",
+        "1" : "one", "2" : "two", "3" : "three", "4" : "four", "5" : "five", "6" : "six", "7" : "seven", "8" : "eight","9" : "nine", "10": "ten",
+        "11": "eleven", "12": "twelve", "13": "thirteen", "14": "fourteen", "15": "fifteen", "16": "sixteen", "17": "seventeen", "18": "eighteen", "19": "nineteen",
+        "20": "twenty", "30": "thirty", "40": "fourty", "50": "fifty", "60": "sixty", "70": "seventy", "80": "eighty", "90": "ninety",
+        "100": "hundred", "1000": "thousand"},
+      thousands = Math.floor(n/1000),
+      m = n % 1000,
+      result = [],
+      plural = function(n) {
+	return n>1 ? "s" : "";
+      },
+      hundreds = function(n) {
+	var x, result = [];
+	x=Math.floor(n/100);
+	if (x>0) {
+	  result.push(dic[x]);
+	  result.push(dic[100]+plural(x));
+	  n = n % 100;
+	}
+	if (n>20) {
+	  x = Math.floor(n/10)*10;
+	  result.push(dic[x]);
+	  n = n % 10;
+	}
+	if (n>0) {
+	  result.push(dic[n]);
+	}
+	return result;
+      };
+
+  if (n==0) return dic[0];
+
+  if (thousands>0) {
+    result = hundreds(thousands);
+    result.push(dic[1000]+plural(thousands));
+  }
+  if (m>0) {
+    result = result.concat(hundreds(m));
+  }
+  return result.join(" ");
+};
+
+console.log(to_en_phrase(654311));
