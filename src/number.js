@@ -333,3 +333,26 @@ var to_en_phrase = function(n) {
 };
 
 console.log(to_en_phrase(654311));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 19.7
+var max_subarray_range = function(ar_org) {
+  var i=0, len=ar_org.length, submin=Infinity, max=-Infinity, max_i, submin_i, ar=ar_org.slice(), prev, submin_j;
+  for (; i<len; i+=1) {
+    prev = ar[i-1] || 0;
+    ar[i] = prev+ar[i];
+    if (ar[i]-submin>=max) {
+      max_i = i;
+      submin_j = submin_i;
+      max = ar[i]-submin;
+    }
+    if (ar[i]<=submin) {
+      submin_i = i;
+      submin = ar[i];
+    }
+  }
+  return ar_org.slice(submin_j+1, max_i+1);
+};
+
+console.log(max_subarray_range([2,-8,3,-2,4,-10]));
+
