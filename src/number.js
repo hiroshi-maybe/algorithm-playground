@@ -356,3 +356,23 @@ var max_subarray_range = function(ar_org) {
 
 console.log(max_subarray_range([2,-8,3,-2,4,-10]));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 19.11 (Suppose array is sorted)
+
+var sum_pair = function(ar, target) {
+  var left=0, right=ar.length-1, sum;
+  while (left<right) {
+    sum = ar[left]+ar[right];
+    if (sum==target) {
+      console.log("pair:",ar[left],ar[right]);
+      left+=1; right-=1;
+    } else if (sum<target) {
+      left+=1;
+    } else {
+      // sum>target
+      right-=1;
+    }
+  }
+};
+
+sum_pair([-2,-1,0,3,5,6,7,9,13,14], 14);
