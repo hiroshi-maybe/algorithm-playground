@@ -381,14 +381,23 @@ sum_pair([-2,-1,0,3,5,6,7,9,13,14], 14);
 // Q 20.4
 
 var count_twos = function(n) {
-  var nums = [], i, len, cnt=0;
-  for (i=0; i<=n; i+=1) {
-    nums = nums.concat(String(i).split(""));
-  }
-  for (i=0, len=nums.length; i<len; i+=1) {
-    cnt+= nums[i]==2 ? 1 : 0;
-  }
-  return cnt;
-};
+  var chars = String(n).split(""),
+      first = +chars[0],
+      scale = chars.length,
+      pow   = Math.pow(10,scale-1),
+      remainder = +(chars.slice(1).join("")),
+      first_two_cont = 0;
 
-console.log(count_twos(20));
+  if (n==0) return 0;
+
+  if (first>2) {
+    first_two_cont = pow;
+  }
+  if (first==2) {
+    first_two_cont = remainder+1;
+  }
+  
+  return first * count_twos2(pow-1) + count_twos2(remainder) + first_two_cont;
+  
+};
+console.log(count_twos(123456));
