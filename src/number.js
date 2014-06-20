@@ -376,3 +376,19 @@ var sum_pair = function(ar, target) {
 };
 
 sum_pair([-2,-1,0,3,5,6,7,9,13,14], 14);
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 20.4
+
+var count_twos = function(n) {
+  var nums = [], i, len, cnt=0;
+  for (i=0; i<=n; i+=1) {
+    nums = nums.concat(String(i).split(""));
+  }
+  for (i=0, len=nums.length; i<len; i+=1) {
+    cnt+= nums[i]==2 ? 1 : 0;
+  }
+  return cnt;
+};
+
+console.log(count_twos(20));
