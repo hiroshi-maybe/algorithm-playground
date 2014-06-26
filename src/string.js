@@ -200,3 +200,28 @@ var is_all_unique = function(str) {
 
 console.log("is all unique?");
 console.log(is_all_unique("aba"));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q.20.5
+
+var shortest_distance = function(words, word1, word2) {
+  var min = Infinity,
+      word1_pos = Infinity,
+      word2_pos = Infinity;
+  words.forEach(function(word, i) {
+    var distance;
+    if (word===word1) {
+      word1_pos = i;
+    } else if (word===word2) {
+      word2_pos = i;
+    } else {
+      return;
+    }
+    distance = Math.abs(word1_pos-word2_pos);
+    min = Math.min(distance, min);
+  });
+  return min;
+};
+
+console.log(shortest_distance(["a","b","c","b","d","e","f","a","c","g","b"], "a", "b"));
+
