@@ -225,3 +225,36 @@ var shortest_distance = function(words, word1, word2) {
 
 console.log(shortest_distance(["a","b","c","b","d","e","f","a","c","g","b"], "a", "b"));
 
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q.20.7
+
+var longest_words = function(strs) {
+  var set, i, len=strs.length, longest_len=-1, str, longest="",
+      match = function(word, set) {
+	var len_str=word.length, j, suffix, matched=false;
+	if (word==="") { return true; }
+	for (j=1; j<=len_str; j+=1) {
+	  suffix = word.substr(0,j);
+	  if (set[suffix]!=null) {
+	    matched=match(word.substr(j), set);
+	    if (matched) { return matched; }
+	  }
+	}
+	return matched;
+      };
+  set = strs.reduce(function(set, word) {
+    set[word] = true;
+    return set;
+  }, {});
+
+  for (i=0; i<len; i+=1) {
+    str = strs[i];
+    if (match(str, set) && str.length>longest_len) {
+      longest = str;
+      longest_len = str.length;
+    }
+  }
+  return longest;
+};
+
+console.log(longest_words(["test","tester","testertest","testing","testingtester"]));

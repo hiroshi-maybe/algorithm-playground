@@ -431,5 +431,3 @@ var top_k = function(ar, k) {
 
 console.log(top_k([4,1,6,3,8,7,5,2], 8));
 
-
-
