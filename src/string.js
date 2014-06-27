@@ -258,3 +258,37 @@ var longest_words = function(strs) {
 };
 
 console.log(longest_words(["test","tester","testertest","testing","testingtester"]));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q.20.8
+
+var suffix_search = function(ar, str) {
+  var suffix, i, len=str.length, suffix_tree = {}, suf_len, j, node, ch, found=false,
+      search_suffix_tree = function(tree, str) {
+	var ch = str.charAt(0);
+	if (ch==="") return true;
+	if (tree[ch]!=null) {
+	  return search_suffix_tree(tree[ch], str.substr(1));
+	} else {
+	  return false;
+	}
+      };
+  for (i=0; i<len; i+=1) {
+    suffix = str.substr(i);
+    suf_len = suffix.length;
+    node = suffix_tree;
+    for (j=0; j<suf_len; j+=1) {
+      ch = suffix.charAt(j);
+      if (node[ch]==null) { node[ch]={}; }
+      node = node[ch];
+    }
+  }
+  
+  for (i=0, len=ar.length; i<len; i+=1) {
+    found = search_suffix_tree(suffix_tree, ar[i]);
+    if (found) return true; 
+  }
+  return false;
+};
+
+console.log(suffix_search(["ab","ir","ni","st"], "string"));
