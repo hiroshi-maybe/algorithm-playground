@@ -397,7 +397,39 @@ var count_twos = function(n) {
     first_two_cont = remainder+1;
   }
   
-  return first * count_twos2(pow-1) + count_twos2(remainder) + first_two_cont;
+  return first * count_twos(pow-1) + count_twos(remainder) + first_two_cont;
   
 };
 console.log(count_twos(123456));
+
+// http://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 20.6
+
+var top_k = function(ar, k) {
+  var piv = ar[0], temp, len = ar.length, i, j, len_smaller, smaller;
+  ar[0]=ar[len-1]; ar[len-1]=piv;
+  for (i=0, j=0; i<len-1; i+=1) {
+    if (ar[i]<=piv) {
+      temp=ar[i]; ar[i]=ar[j]; ar[j]=temp;
+      j+=1;
+    }
+    console.log(i,j,ar);
+  }
+  ar[len-1]=ar[j]; ar[j]=piv;
+
+  smaller = ar.slice(0,j+1);
+  len_smaller = smaller.length;
+  if (k==len_smaller) {
+    return smaller;
+  }
+  if (k<len_smaller) {
+    return top_k(smaller, k);
+  } else {
+    return smaller.concat(top_k(ar.slice(len_smaller), k-len_smaller));
+  }
+};
+
+console.log(top_k([4,1,6,3,8,7,5,2], 8));
+
+
+
