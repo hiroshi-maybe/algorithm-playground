@@ -1,1 +1,5 @@
+// for OS X
 *.DS_Store*
+
+// for C++
+a.out
