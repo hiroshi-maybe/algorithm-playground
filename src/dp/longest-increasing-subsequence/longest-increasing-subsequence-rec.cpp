@@ -19,22 +19,22 @@ int dp[1000];
 int n=100;
 int a[100] = {19,49,59,40,46,89,96,57,71,43,56,3,92,42,87,15,48,81,86,16,16,37,66,21,14,3,44,51,98,70,59,74,86,26,35,30,92,19,8,91,80,32,61,53,41,84,53,61,5,66,39,12,78,96,55,79,59,84,58,4,49,54,18,50,69,22,40,74,85,7,21,41,30,78,72,9,19,48,38,14,96,99,18,35,91,70,8,3,22,9,23,53,90,23,63,29,34,52,35,73};
 int dp[100];
-//ans = 14
+//ans = 17
 // $ time ./a.out
-//  real  0m0.013s
-//  user  0m0.008s
-//  sys   0m0.002s
+//  real  0m0.094s
+//  user  0m0.087s
+//  sys   0m0.003s
 
 /*
-int n=5;
-int a[5] = {4, 2, 3, 1, 5};
-int dp[5];
+int n=6;
+int a[6] = {4, 2, 3, 1, 5, 5};
+int dp[6];
 //ans = 3
 */
 
 int search(int a[], int last) {
   if (last < 0) return 1;
-  
+
   int res = 1;
   REP(i,last) {
     if (a[last]<=a[i]) continue;
@@ -45,7 +45,9 @@ int search(int a[], int last) {
 
 void solve() {
   memset(dp, -1, sizeof(dp));
-  cout << search(a, n-1) << endl;
+  int res = 1;
+  REP(i,n) res = max(res, search(a, i));
+  cout << res << endl;
 }
 
 int main(int argc, char const *argv[]) {
