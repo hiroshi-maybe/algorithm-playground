@@ -30,21 +30,19 @@ int v[100] = {53,9,65,12,56,50,80,45,80,71,97,21,63,29,40,94,50,23,1,76,34,87,11
 
 long dp[100][1001];
 
-int search(int i, int rem_w) {
-  if (i<0) return 0;
-  if (dp[i][rem_w]!=-1) return dp[i][rem_w];
-  int res = 0;
-  int _v = v[i];
-  int _w = w[i];
-  REP(j,rem_w/_w+1) {
-    res=max(res, search(i-1, rem_w - _w*j) + _v*j);
-  }
-  return dp[i][rem_w] = res;
-}
-
 void solve() {
-  memset(dp, -1, sizeof(dp));
-  cout << search(n-1, W) << endl;
+  memset(dp, 0, sizeof(dp));
+  REP(i,n) {
+    int _w=w[i];
+    int _v=v[i];
+    REP(j,W+1) {
+      REP(k,j/_w+1) {
+	dp[i][j]=max(dp[i][j],
+		     i==0 ? _v*k : dp[i-1][j-_w*k]+_v*k);
+      }
+    }
+  }
+  cout << dp[n-1][W] << endl;
 }
 
 int main(int argc, char const *argv[]) {
