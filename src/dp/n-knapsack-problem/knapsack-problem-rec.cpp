@@ -30,16 +30,18 @@ int v[100] = {53,9,65,12,56,50,80,45,80,71,97,21,63,29,40,94,50,23,1,76,34,87,11
 
 long dp[100][1001];
 
-int search(int i, int rem_w) {
+int search(int i, int j) {
   if (i<0) return 0;
-  if (dp[i][rem_w]!=-1) return dp[i][rem_w];
+  if (dp[i][j]!=-1) return dp[i][j];
   int res = 0;
   int _v = v[i];
   int _w = w[i];
-  REP(j,rem_w/_w+1) {
-    res=max(res, search(i-1, rem_w - _w*j) + _v*j);
+  if (j < _w) {
+    res = i==0 ? 0 : search(i-1,j);
+  } else {
+    res = max(search(i-1, j), search(i, j-_w)+_v);
   }
-  return dp[i][rem_w] = res;
+  return dp[i][j] = res;
 }
 
 void solve() {
