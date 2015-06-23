@@ -36,9 +36,11 @@ void solve() {
     int _w=w[i];
     int _v=v[i];
     REP(j,W+1) {
-      REP(k,j/_w+1) {
-	dp[i][j]=max(dp[i][j],
-		     i==0 ? _v*k : dp[i-1][j-_w*k]+_v*k);
+      if (j<_w) {
+	dp[i][j] = i==0 ? 0 : dp[i-1][j];
+      } else {
+	long no_use = i==0 ? 0 : dp[i-1][j];
+	dp[i][j]=max(no_use, dp[i][j-_w]+_v);
       }
     }
   }
