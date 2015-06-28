@@ -45,4 +45,10 @@ func add(a:Nat, b:Nat) -> Nat {
     }
 }
 
+func + (a: Nat, b: Nat) -> Nat {
+    return add(a, b)
+}
+
 add(one, three).toInt()
+(three + four).toInt()
+
