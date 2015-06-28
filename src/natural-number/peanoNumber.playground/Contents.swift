@@ -26,15 +26,27 @@ enum Nat {
                 return nat().toInt()+1
         }
     }
+    
+    static func fromInt(value:Int) -> Nat {
+        switch value {
+            case 0:
+                return .Zero
+            default:
+                return .Succ({.fromInt(value-1)})
+        }
+    }
 }
 
 let zero: Nat = .Zero
 let one: Nat = .Succ({zero})
-let two: Nat = .Succ({one})
+let two: Nat = .fromInt(2)
 let three: Nat = .Succ({two})
 let four: Nat = .Succ({.Succ({.Succ({.Succ({.Zero})})})})
+let five: Nat = .Succ({.Succ({.fromInt(3)})})
 
-let fourInt = four.toInt()
+let fourInt = two.toInt()
+
+// add
 
 func add(a:Nat, b:Nat) -> Nat {
     switch b {
@@ -49,6 +61,24 @@ func + (a: Nat, b: Nat) -> Nat {
     return add(a, b)
 }
 
-add(one, three).toInt()
+add(one, two).toInt()
 (three + four).toInt()
+
+// equatable
+
+extension Nat : Equatable {}
+func == (a: Nat, b: Nat) -> Bool {
+    switch (a, b) {
+        case (.Zero, .Zero):
+            return true
+        case (.Zero, _), (_, .Zero):
+            return false
+        case let (.Succ(prevA), .Succ(prevB)):
+            return prevA() == prevB()
+        default:
+            return false
+    }
+}
+
+.fromInt(3) == three
 
