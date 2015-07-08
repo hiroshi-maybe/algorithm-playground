@@ -64,7 +64,31 @@ function dijkstra(start, graph) {
 	return distance;
 };
 
-console.log(dijkstra("1", graph2));
+function bellmanford(start, graph) {
+  var updated=true,
+      dist = graph.vertex.reduce(function(dist, cur) {
+	dist[cur] = Infinity;
+	return dist;
+      }, {});
+
+  dist[start]=0;
+
+  while(updated) {
+    graph.edge.forEach(function(edge) {
+      var from=edge[0],
+          to=edge[1],
+          cost=edge[2],
+          org=dist[to];
+
+      dist[to] = Math.min(dist[to], dist[from]+cost);
+      updated = dist[to]!==org;
+    });
+  }
+  return dist;
+}
+
+console.log("dijkstra", dijkstra("1", graph2));
+console.log("bellmanford", bellmanford("1", graph2));
 
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
@@ -102,7 +126,6 @@ function has_path(graph, start, end) {
     }).map(function(edge) {
       return edge[1];
     }));
-        console.log(buf);
   }
   return false;
 }
