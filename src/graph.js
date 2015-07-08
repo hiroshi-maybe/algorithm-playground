@@ -23,6 +23,36 @@ graph2 = {
 	]
 };
 
+function times(val, n) {
+  var res = [];
+  for(var i=0; i<n; i+=1) {
+    res.push(val);
+  }
+  return res;
+}
+
+function adjacencyList2adjacencyMatrix(graph) {
+  var matrix=[],
+      vertexDic={},
+      vertexes = graph.vertex,
+      edges = graph.edge;
+
+  vertexes.forEach(function(v, i) {
+    matrix[i]=times(Infinity, vertexes.length);
+    matrix[i][i]=0;
+    vertexDic[v]=i;
+  });
+  
+  edges.forEach(function(e) {
+    var from=vertexDic[e[0]],
+        to=vertexDic[e[1]],
+        cost=e[2];
+    matrix[from][to]=cost;
+  });
+
+  return matrix;
+}
+
 function dijkstra(start, graph) {
 	var distance = {},
 		prev = {},
@@ -87,8 +117,23 @@ function bellmanford(start, graph) {
   return dist;
 }
 
+function floyedWarshall(matrix) {
+  var i,j,k,len=matrix.length;
+
+  for(k=0; k<len; k+=1) {
+    for(i=0; i<len; i+=1) {
+      for(j=0; j<len; j+=1) {
+	matrix[i][j] = Math.min(matrix[i][j], matrix[i][k]+matrix[k][j]);
+      }
+    }
+  }
+  return matrix;
+}
+
 console.log("dijkstra", dijkstra("1", graph2));
 console.log("bellmanford", bellmanford("1", graph2));
+var adjascentMatrix=adjacencyList2adjacencyMatrix(graph2);
+console.log("floyd-warshall", floyedWarshall(adjascentMatrix));
 
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
