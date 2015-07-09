@@ -54,44 +54,40 @@ function adjacencyList2adjacencyMatrix(graph) {
 }
 
 function dijkstra(start, graph) {
-	var distance = {},
-		prev = {},
-		vertices = {},
-		u;
+  var dist = {},
+      unfixed = {},
+      i, v;
 
-	// Setup distance sentinel
-	graph.vertex.forEach(function(v_i) {
-		distance[v_i] = Infinity;
-		prev[v_i] = null;
-		vertices[v_i] = true;
-	});
+  // Setup distance sentinel
+  graph.vertex.forEach(function(v_i) {
+    dist[v_i] = Infinity;
+    unfixed[v_i] = true;
+  });
 
-	distance[start] = 0;
+  dist[start] = 0;
 
-	while (Object.keys(vertices).length > 0) {
-		// Obtain a vertex whose distaance is minimum.
-		u = Object.keys(vertices).reduce(function(prev, v_i) {
-			return distance[prev] > distance[v_i] ? +v_i : prev;
-		}, Object.keys(vertices)[0]);
+  while (Object.keys(unfixed).length > 0) {
+    // Obtain a vertex whose distaance is minimum and unfixed.
+    v = Object.keys(unfixed).reduce(function(prev, v) {
+      return dist[prev] > dist[v] ? +v : prev;
+    }, Object.keys(unfixed)[0]);
 
-		graph.edge.filter(function(edge) {
-			var from = edge[0],
-				to 	 = edge[1];
-			return from===u || to===u;
-		})
-		.forEach(function(edge) {
-			var to = edge[1]===u ? edge[0] : edge[1],
-				dist = distance[u] + edge[2];
+    graph.edge.filter(function(edge) {
+        var from = edge[0];
+        return from===v;
+      })
+      .forEach(function(edge) {
+	var to = edge[1],
+	    cost=edge[2];
 
-			if (distance[to] > dist) {
-				distance[to] = dist;
-				prev[to] = u;
-			}
-		});
-		// Mark visited
-		delete vertices[u];
-	}
-	return distance;
+	dist[to] = Math.min(dist[to], dist[v] + cost);
+      });
+
+    // Mark that distance is fixed
+    delete unfixed[v];
+  }
+
+  return dist;
 };
 
 function bellmanford(start, graph) {
