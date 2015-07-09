@@ -90,6 +90,36 @@ function dijkstra(start, graph) {
   return dist;
 };
 
+// dijkstra for adjascent matrix (not adjascent list)
+function dijkstra_matrix(start, cost) {
+  var unfixed = {},
+      dist = [],
+      vertNum = cost[0].length,
+      i, v;
+
+  // initialize distance and visited vertex set
+  for(i=0; i<vertNum; i+=1) {
+    dist[i] = Infinity;
+    unfixed[i] = true;
+  }
+
+  dist[start]=0;
+
+  while(Object.keys(unfixed).length>0) {
+
+    v = Object.keys(unfixed).reduce(function(prev, v) {
+      return dist[prev] > dist[v] ? +v : prev;
+    }, Object.keys(unfixed)[0]);
+
+    for(i=0; i<vertNum; i+=1) {
+      dist[i] = Math.min(dist[i], dist[v]+cost[v][i]);
+    }
+    delete unfixed[v];
+  }
+
+  return dist;
+}
+
 function bellmanford(start, graph) {
   var updated=true,
       dist = graph.vertex.reduce(function(dist, cur) {
@@ -129,6 +159,7 @@ function floyedWarshall(matrix) {
 console.log("dijkstra", dijkstra("1", graph2));
 console.log("bellmanford", bellmanford("1", graph2));
 var adjascentMatrix=adjacencyList2adjacencyMatrix(graph2);
+console.log("dijkstra_matrix", dijkstra_matrix(0, adjascentMatrix));
 console.log("floyd-warshall", floyedWarshall(adjascentMatrix));
 
 graph2 = {
