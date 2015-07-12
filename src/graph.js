@@ -198,9 +198,51 @@ function prim(graph) {
   return dist;
 }
 
+// union-find tree for Kruskal's algorithm
+
+function UnionFind(n) {
+  this.parent=[];
+  this.rank=[];
+  for (var i = 0; i < n; i++) {
+    this.parent[i] = i;
+    this.rank[i] = 0;
+  }
+}
+
+UnionFind.prototype.findRoot = function(x) {
+  if (this.parent[x] === x) return x;
+
+  // path compression in search
+  // no update of rank to reduce complexity
+  this.parent[x] = this.findRoot(this.parent[x]);
+  return this.parent[x];
+};
+UnionFind.prototype.unite = function(x, y) {
+  x = this.findRoot(x);
+  y = this.findRoot(y);
+
+  // already in the same set
+  if (x == y) return;
+
+  // path compression
+  if (this.rank[x] < this.rank[y]) {
+    this.parent[x] = y;
+  } else {
+    this.parent[y] = x;
+    if (this.rank[x] === this.rank[y]) this.rank[x]++;
+  }
+};
+UnionFind.prototype.isSame = function(x, y) {
+  return this.findRoot(x) == this.findRoot(y);
+};
+
 var primRes = prim(graph2);
 console.log("prim", primRes);
-assert.equal(33, primRes);
+assert.equal(primRes, 33);
+
+var uf = new UnionFind(2);
+uf.unite(0,1);
+assert.equal(true, uf.isSame(0,1));
 
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
