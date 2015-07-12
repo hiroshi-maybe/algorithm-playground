@@ -236,13 +236,46 @@ UnionFind.prototype.isSame = function(x, y) {
   return this.findRoot(x) == this.findRoot(y);
 };
 
+var uf = new UnionFind(2);
+uf.unite(0,1);
+assert.equal(true, uf.isSame(0,1));
+
 var primRes = prim(graph2);
 console.log("prim", primRes);
 assert.equal(primRes, 33);
 
-var uf = new UnionFind(2);
-uf.unite(0,1);
-assert.equal(true, uf.isSame(0,1));
+function klaskal(graph) {
+  var edges = graph.edge.slice(), edge, dist=0, uf;
+
+  uf = new UnionFind(graph.vertex.length);
+  edges.sort(function(a, b) { return a[2] > b[2]; });
+
+  edges.forEach(function(edge) {
+    if (!uf.isSame(edge[0], edge[1])) {
+      dist += edge[2];
+      uf.unite(edge[0], edge[1]);
+    }
+  });
+  return dist;
+}
+
+var graph3 = {
+	vertex: [0,1,2,3,4,5],
+	edge: [
+	/* vertex1, vertex2, weight */
+		[0, 1, 7],
+		[0, 2, 9],
+		[0, 5, 14],
+		[1, 2, 10],
+		[1, 3, 15],
+		[2, 3, 11],
+		[2, 5, 2],
+		[3, 4, 6],
+		[4, 5, 9]
+	]
+};
+
+assert.equal(klaskal(graph3), 33);
 
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
