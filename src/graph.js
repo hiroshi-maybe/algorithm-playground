@@ -1,6 +1,8 @@
+var assert = require('assert');
+
 var graph1 = {
 	vertex: ["1","2","3"],
-	edge: [,
+	edge: [
 	/* vertex1, vertex2, weight */
 		["1", "2", 4],
 		["1", "3", 7],
@@ -9,7 +11,7 @@ var graph1 = {
 },
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
-	edge: [,
+	edge: [
 	/* vertex1, vertex2, weight */
 		["1", "2", 7],
 		["1", "3", 9],
@@ -30,6 +32,8 @@ function times(val, n) {
   }
   return res;
 }
+
+/************* algorighms to solve shortest path problem *************/
 
 function adjacencyList2adjacencyMatrix(graph) {
   var matrix=[],
@@ -162,9 +166,45 @@ var adjascentMatrix=adjacencyList2adjacencyMatrix(graph2);
 console.log("dijkstra_matrix", dijkstra_matrix(0, adjascentMatrix));
 console.log("floyd-warshall", floyedWarshall(adjascentMatrix));
 
+/************* algorighms to find minimum spanning tree *************/
+
+function prim(graph) {
+  var dist = 0, visitedSet = {}, vCount = graph.vertex.length, visitedList, u, v, i, minCost, edge;
+
+  visitedSet[graph.vertex[0]] = true;
+  
+  while ((visitedList = Object.keys(visitedSet)).length < vCount) {
+    minCost = Infinity;
+    for (i=0; i<graph.edge.length; i+=1) {
+      visitedList = Object.keys(visitedSet);
+      edge = graph.edge[i];
+
+      if (visitedList.indexOf(edge[0])<0 && visitedList.indexOf(edge[1])>-1) {
+	u = edge[0];
+      } else if (visitedList.indexOf(edge[1])<0 && visitedList.indexOf(edge[0])>-1) {
+	u = edge[1];
+      } else {
+	continue;
+      }
+      if (edge[2]<minCost) {
+	v = u;
+	minCost = edge[2];
+      }
+    }
+    visitedSet[v] = true;
+    dist += minCost;
+  }
+
+  return dist;
+}
+
+var primRes = prim(graph2);
+console.log("prim", primRes);
+assert.equal(33, primRes);
+
 graph2 = {
 	vertex: ["1","2","3","4","5","6"],
-	edge: [,
+	edge: [
 	/* vertex1, vertex2, weight */
 		["1", "2", 7],
 		["1", "3", 9],
