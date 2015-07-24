@@ -6,8 +6,6 @@ import UIKit
 var str = "Hello, playground"
 
 /*
- * recursive type will be supported in Swift 2.0 in the future
- *
  * enum Nat {
  *   case Zero
  *   indirect case Succ(Nat)
@@ -16,14 +14,14 @@ var str = "Hello, playground"
 
 enum Nat {
     case Zero
-    case Succ(()->Nat)
+    indirect case Succ(Nat)
     
     func toInt()->Int {
         switch self {
             case .Zero:
                 return 0
             case .Succ(let nat):
-                return nat().toInt()+1
+                return nat.toInt()+1
         }
     }
     
@@ -32,17 +30,17 @@ enum Nat {
             case 0:
                 return .Zero
             default:
-                return .Succ({.fromInt(value-1)})
+                return .Succ(.fromInt(value-1))
         }
     }
 }
 
 let zero: Nat = .Zero
-let one: Nat = .Succ({zero})
+let one: Nat = .Succ(zero)
 let two: Nat = .fromInt(2)
-let three: Nat = .Succ({two})
-let four: Nat = .Succ({.Succ({.Succ({.Succ({.Zero})})})})
-let five: Nat = .Succ({.Succ({.fromInt(3)})})
+let three: Nat = .Succ(two)
+let four: Nat = .Succ(.Succ(.Succ(.Succ(.Zero))))
+let five: Nat = .Succ(.Succ(.fromInt(3)))
 
 let fourInt = two.toInt()
 
@@ -53,15 +51,15 @@ func add(a:Nat, b:Nat) -> Nat {
     case .Zero:
         return a
     case .Succ(let nat):
-        return add(.Succ({a}), nat())
+        return add(.Succ(a), b: nat)
     }
 }
 
 func + (a: Nat, b: Nat) -> Nat {
-    return add(a, b)
+    return add(a, b: b)
 }
 
-add(one, two).toInt()
+add(one, b: two).toInt()
 (three + four).toInt()
 
 // equatable
@@ -74,7 +72,7 @@ func == (a: Nat, b: Nat) -> Bool {
         case (.Zero, _), (_, .Zero):
             return false
         case let (.Succ(prevA), .Succ(prevB)):
-            return prevA() == prevB()
+            return prevA == prevB
         default:
             return false
     }

@@ -7,18 +7,18 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>09C261BB-79D8-446F-9885-1A9DF20A719E</string>
 	<key>IDESourceControlProjectName</key>
-	<string>peanoNumber</string>
+	<string>playground</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>4638C90800DF446463550ECF895FF7177A4FFD09</key>
 		<string>https://github.com/k-ori/algorithm-playground</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>src/natural-number/peanoNumber.playground</string>
+	<string>src/natural-number/peanoNumber.playground/playground.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>4638C90800DF446463550ECF895FF7177A4FFD09</key>
-		<string>../../..</string>
+		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/k-ori/algorithm-playground</string>
