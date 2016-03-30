@@ -1,6 +1,6 @@
 
 // brute force: 6425502 times `lcs_rec` called
-// brute force:     184 times `lcs_rec` called
+// memoization:     184 times `lcs_rec` called
 var x = "nematode_knowledge",
     y = "empty_bottle";
 
