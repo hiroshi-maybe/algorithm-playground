@@ -105,7 +105,7 @@ if let node1 = Node.create([1].sort()),
 // 18 -> 7 -> 2 -> 89 -> p:1 -> n:18
 // 18 -> 7 -> 2 -> 89 -> p:1
 
-let headToDelDuplicate = Node.create([18, 7, 2, 89, 1, 2, 7, 18])
+let headToDelDuplicate = Node.create([18, 7, 2, 89, 1, 2, 7, 18])!
 
 func deleteDuplicatedInLinkedList(node: Node, prev: Node?, var found: Set<Int> = Set()) -> Node {
   // `found` has values in head -> .. -> prev
@@ -128,4 +128,88 @@ func deleteDuplicatedInLinkedList(node: Node, prev: Node?, var found: Set<Int> =
   return node
 }
 
-assert("\(deleteDuplicatedInLinkedList(headToDelDuplicate!, prev: nil))" == "18->7->2->89->1->nil")
+assert("\(deleteDuplicatedInLinkedList(headToDelDuplicate, prev: nil))" == "18->7->2->89->1->nil")
+
+// 18 -> 7 -> 89 -> 1 -> 7 -> 18 -> nil
+//                  *
+// found = { 18, 7, 89, 1 }
+//
+// 18 -> 7 -> 89 -> 1 -> 18 -> nil
+//                  *
+// found = { 18, 7, 89, 1 }
+//
+// 18 -> 7 -> 89 -> 1 -> nil
+//                  *
+// found = { 18, 7, 89, 1 }
+//
+
+func deleteDuplicatedInLinkedListIter(head: Node) -> Node {
+  var found = Set([head.v])
+  var pointer: Node = head
+  
+  while let next = pointer.next {
+    // invariant: `found` includes value of head -> pointer, next needs to be checked
+    
+    if found.contains(next.v) {
+      pointer.next = next.next
+    } else {
+      pointer = next
+      found.insert(pointer.v)
+    }
+  }
+  
+  return head
+}
+
+assert("\(deleteDuplicatedInLinkedListIter(headToDelDuplicate))" == "18->7->2->89->1->nil")
+
+// 18 -> 7 -> 89 -> 18 -> 7 -> 18 -> nil
+//  *1
+//
+// 18 -> 7 -> 89 -> 7 -> 18 -> nil
+//  *1   *2 ------------>*2
+// 18 -> 7 -> 89 -> 7 -> nil
+//  *1   *2 ------------->*2
+//
+// 18 -> 7 -> 89 -> 7 -> nil
+//      *1    *2 -> *2
+//
+// 18 -> 7 -> 89 -> 7 -> nil
+//      *1    *2 -> *2
+
+func deleteDuplicatedInLinkedListNoBuffer(head: Node) -> Node {
+  var pointer: Node = head
+  
+  while true {
+    // invariant: `next` needs to be checked for `pointer.v`
+    deleteNodes(pointer, v: pointer.v)
+    
+    // invariant: following nodes from `next` should not have `pointer.v`
+    
+    if let next = pointer.next {
+      pointer = next
+    } else {
+      break
+    }
+  }
+  
+  return head
+}
+
+// 18 -> 7 -> 89 -> 7 -> 18 -> nil
+// v               *2
+
+// delete nodes with `v` following from `node.next`
+func deleteNodes(node: Node, v: Int) {
+  var pointer = node
+  
+  while let next = pointer.next {
+    if next.v == v {
+      pointer.next = next.next
+    } else {
+      pointer = next
+    }
+  }
+}
+
+assert("\(deleteDuplicatedInLinkedListNoBuffer(headToDelDuplicate))" == "18->7->2->89->1->nil")
