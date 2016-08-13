@@ -9,7 +9,7 @@
 import Foundation
 
 class Node: CustomDebugStringConvertible {
-  let v: Int
+  var v: Int
   var next: Node?
   
   init(v: Int) {
@@ -269,3 +269,74 @@ func findNthToLast(node: Node, n: Int) -> Node? {
 assert(findNthToLast(headToFindLastNth, n: 3)!.v == 3)
 assert(findNthToLast(headToFindLastNth, n: 5)!.v == 1)
 assert(findNthToLast(headToFindLastNth, n: 6) == nil)
+
+/////////////////////////////////
+
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 2.4
+// 3 -> 1 -> 5
+// *
+// 5 -> 9 -> 4
+// *
+// 8 -> 0
+
+// 3 -> 1 -> 5
+//      *
+// 5 -> 9 -> 4
+//      *
+// 8 -> 0 -> 1
+
+// 3 -> 1 -> 5 -> 1
+//           *
+// 5 -> 9 -> 4
+//           *
+// 8 -> 0 -> 0
+//           *(c==1)
+
+// 3 -> 1 -> 5 -> 1 -> nil
+//                *
+// 5 -> 9 -> 4 -> nil
+//                *
+// 8 -> 0 -> 0 -> 1
+//                *
+
+// 3 -> 1 -> 5 -> 1 -> nil
+//                     *
+// 5 -> 9 -> 4 -> nil
+//                *
+// 8 -> 0 -> 0 -> 2
+//                *(c: 0)
+
+func sumDigits(node1: Node, _ node2: Node) -> Node {
+  var p1: Node? = node1
+  var p2: Node? = node2
+  
+  let head = Node(v: 0)
+  var p3 = head
+  
+  while p1 != nil || p2 != nil {
+    // invariant: p1 or p2 exists, carry over is in p3
+    
+    p3.v += (p1?.v ?? 0) + (p2?.v ?? 0)
+    
+    let carryOver = p3.v/10
+    p3.v = p3.v % 10
+    
+    p1 = p1?.next
+    p2 = p2?.next
+    
+    if carryOver == 0 && p1 == nil && p2 == nil {
+      continue
+    }
+    
+    let newNode = Node(v: carryOver)
+    p3.next = newNode
+    p3 = newNode
+  }
+  
+  return head
+}
+
+let headToSum1 = Node.create([3, 1, 5, 1])!
+let headToSum2 = Node.create([5, 9, 4])!
+assert("\(sumDigits(headToSum1, headToSum2))" == "8->0->0->2->nil")
