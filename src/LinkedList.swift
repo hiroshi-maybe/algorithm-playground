@@ -340,3 +340,92 @@ func sumDigits(node1: Node, _ node2: Node) -> Node {
 let headToSum1 = Node.create([3, 1, 5, 1])!
 let headToSum2 = Node.create([5, 9, 4])!
 assert("\(sumDigits(headToSum1, headToSum2))" == "8->0->0->2->nil")
+
+/////////////////////////////////
+
+/*
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 2.5
+
+  0 -> 1 -> 2 -> 3 -> 4 -> 2
+ *1
+ *2
+
+ 0 -> 1 -> 2 -> 3 -> 4 -> 2
+     *1
+          *2
+
+ 0 -> 1 -> 2 -> 3 -> 4 -> 2
+          *1
+                    *2
+
+ 0 -> 1 -> 2 -> 3 -> 4 -> 2
+               *1
+               *2
+
+ 0 -> 1 -> 2 -> 3 -> 4 -> 3
+ *1
+ *2
+ 
+ 0 -> 1 -> 2 -> 3 -> 4 -> 3
+     *1
+          *2
+ 
+ 0 -> 1 -> 2 -> 3 -> 4 -> 3
+          *1
+                    *2
+ 
+ 0 -> 1 -> 2 -> 3 -> 4 -> 3
+               *1
+          *2
+ 
+ x > k
+ p1: k + (x-k)%(n-k)
+ 
+ 0 <- 1 2 -> 3 -> 4 -> 2 -> 3 -> ..
+ 0 <- 1 <- 2 3 -> 4 -> 2 -> 1 -> ..
+ 0 <- 1 <- 2 <- 3 4 -> 2 -> 1 -> ..
+ 0 <- 1 <- 2 <- 3 <- 4 2 -> 1 -> ..
+ 0 <- 1 <- 2 <- 3 <- 4 <- 2 1
+ 
+*/
+
+let node0 = Node(v: 0)
+let node1 = Node(v: 1)
+let node2 = Node(v: 2)
+let node3 = Node(v: 3)
+let node4 = Node(v: 4)
+
+// 0 -> 1 -> 2 -> 3 -> 4 -> 2
+node0.next = node1
+node1.next = node2
+node2.next = node3
+node3.next = node4
+node4.next = node2
+
+func findLoopStart(node: Node) -> Node? {
+  var fastP = node
+  var slowP = node
+  
+  while let slowPNext = slowP.next,
+            fastPNext = fastP.next?.next {
+    slowP = slowPNext
+    fastP = fastPNext
+    if slowP === fastP { break }
+  }
+  
+  // invariant: slowP points to k steps before loop start
+  
+  var trackP = node
+  
+  while let slowPNext = slowP.next,
+           trackPNext = trackP.next {
+      slowP = slowPNext
+      trackP = trackPNext
+      if slowP === trackP { return trackP }
+  }
+  
+  return nil
+}
+
+assert(findLoopStart(node0)!.v==2)
