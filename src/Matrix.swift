@@ -173,3 +173,49 @@ assert(rotateMatrix(matrixToRotate)==[
   ]
 )
 
+/////////////////////////////////
+
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 1.8
+
+let matrixToFillZero = [
+  [6, 5, -9, 2],
+  [-2, -5, 0, 7],
+  [-8, 0, 1, -2]
+]
+
+func fillZeroInMatrix(_matrix: [[Int]]) -> [[Int]] {
+  var matrix = _matrix
+  
+  var zeroPosI = Set<Int>()
+  var zeroPosJ = Set<Int>()
+  
+  for i in 0 ..< matrix.count {
+    for j in 0 ..< matrix[i].count {
+      if matrix[i][j] == 0 {
+        zeroPosI.insert(i)
+        zeroPosJ.insert(j)
+      }
+    }
+  }
+  
+  for i in 0 ..< matrix.count {
+    if zeroPosI.contains(i) {
+      matrix[i] = Array(count: matrix[i].count, repeatedValue: 0)
+    }
+    for j in 0 ..< matrix[i].count {
+      if zeroPosJ.contains(j) {
+        matrix[i][j] = 0
+      }
+    }
+  }
+  
+  return matrix
+}
+
+assert(fillZeroInMatrix(matrixToFillZero)==[
+  [6, 0, 0, 2],
+  [0, 0, 0, 0],
+  [0, 0, 0, 0]
+  ]
+)
