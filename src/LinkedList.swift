@@ -213,3 +213,59 @@ func deleteNodes(node: Node, v: Int) {
 }
 
 assert("\(deleteDuplicatedInLinkedListNoBuffer(headToDelDuplicate))" == "18->7->2->89->1->nil")
+
+/////////////////////////////////
+
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 2.2
+
+// 1 -> 2 -> ... -> *4981 -> ... -> 5000
+// ! want to find 20th to last
+// Option 1:
+//  1. total: 5000 (iterate 5000 elements)
+//  2. follow link by (5000 - 20) 4980 times
+//  -> 9980 iterations
+//
+// Option 2:
+//   1 -> 2 -> ... -> 20 -> ... -> 4981 -> ... -> 5000
+//   *p1              *p2
+//   1 -> 2 -> ... -> 20 -> 21 -> ... -> 4981 -> ... -> 5000
+//        *p1               *p2
+// ....
+//   1 -> 2 -> ... -> 20 -> 21 -> ... -> 4981 -> ... -> 5000
+//                                       *p1             *p2
+//  -> 20 + 4980 = 5000 iterations
+
+let headToFindLastNth = Node.create([1, 2, 3, 4, 5])!
+
+// 1 -> 2 -> 3 -> 4 -> 5
+// *1
+//      *2
+// 1 -> 2 -> 3 -> 4 -> 5
+//                *1
+//                    *2
+
+func findNthToLast(node: Node, n: Int) -> Node? {
+  var ahead = node
+  var following = node
+  
+  // move ahead pointer
+  for _ in 0..<n-1 {
+    guard let next = ahead.next else { return nil }
+    
+    ahead = next
+  }
+  
+  // move both
+  while let nextAhead = ahead.next,
+        nextFollowing = following.next {
+    ahead = nextAhead
+    following = nextFollowing
+  }
+  
+  return following
+}
+
+assert(findNthToLast(headToFindLastNth, n: 3)!.v == 3)
+assert(findNthToLast(headToFindLastNth, n: 5)!.v == 1)
+assert(findNthToLast(headToFindLastNth, n: 6) == nil)
