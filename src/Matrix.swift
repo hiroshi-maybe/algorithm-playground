@@ -113,3 +113,63 @@ func subRectangle(matrix: [[Int]], n: Int) -> Int {
 }
 
 assert(subRectangle(matrix, n: 4) == 28)
+
+/////////////////////////////
+
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 1.6
+
+let matrixToRotate = [
+  [0,   1,  2,  3],
+  [4,   5,  6,  7],
+  [8,   9, 10, 11],
+  [12, 13, 14, 15]
+]
+
+// i,j=0,0..2 / 1, 1..1
+// i = 0 ..< n/2
+//   j = i ..< n-i-1
+
+// mat[y][x] -> mat[3-x][y]
+
+// mat[0][1] (1) -> mat[2][0]
+// mat[1][2] (6) -> mat[1][1]
+
+// Time complexity: O(n^2)
+// Space complexity: O(n^2)
+
+func rotateMatrix(_matrix: [[Int]]) -> [[Int]] {
+  var matrix = _matrix
+  let size = matrix.count
+  for i in 0 ..< size/2 {
+    for j in i ..< (size-i-1) {
+      let val1 = matrix[i][j]
+      let pos2 = nextPos(i, j, size: size)
+      let val2 = matrix[pos2.i][pos2.j]
+      let pos3 = nextPos(pos2.i, pos2.j, size: size)
+      let val3 = matrix[pos3.i][pos3.j]
+      let pos4 = nextPos(pos3.i, pos3.j, size: size)
+      let val4 = matrix[pos4.i][pos4.j]
+      
+      matrix[i][j] = val4
+      matrix[pos2.i][pos2.j] = val1
+      matrix[pos3.i][pos3.j] = val2
+      matrix[pos4.i][pos4.j] = val3
+    }
+  }
+  
+  return matrix
+}
+
+func nextPos(i: Int, _ j: Int, size: Int) -> (i: Int, j: Int) {
+  return (i: size-j-1, j: i)
+}
+
+assert(rotateMatrix(matrixToRotate)==[
+  [3,7,11,15],
+  [2,6,10,14],
+  [1,5, 9,13],
+  [0,4, 8,12]
+  ]
+)
+
