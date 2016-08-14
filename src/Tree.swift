@@ -579,6 +579,8 @@ assert(isSubtree(treeToFindSubtree, treeToFindSubtree2))
 
  */
 
+// Time complexity: O(N) where N is size of the tree
+// Space complexity: O(D + D^2) = O(D^2) where D is max depth of the tree
 func findPath(node: TreeNode, sum: Int) -> [[TreeNode]] {
   return findPathPatterns(node, pattern: [(remain: sum-node.data, path: [node])], sum: sum)
 }
