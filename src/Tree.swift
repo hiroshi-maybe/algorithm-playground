@@ -527,38 +527,74 @@ assert(isSubtree(treeToFindSubtree, treeToFindSubtree2))
 
  find path to sum up 7
 
+ L(1)
  [
-  (0, [0]),
-  (1, [1]),
-  (1, [1,0]),
-  (3, [3]), <- leftPath
-  (4, [4]), <- rightPath
-  (2, [2]), <- myNodePath
-  (1, [1,2]),
-  (5, [2,3]), <- left flatMap
-  (6, [2,4]), <- right flatMap
-  (6, [1,2,3]),
-  (7, [1,2,4]),
-  ...
+  (2, [5])
  ]
+ ->
+ [
+  (1, [5,1])
+  (6, [1])
+ ]
+ 
+ LL(0)
+ [
+  (1, [5,1])
+  (6, [1])
+ ]
+ ->
+ [
+  (1, [5,1,0])
+  (6, [1,0])
+  (7, [0])
+ ]
+
+ LLL(nil), LLR(nil)
+ [
+  (1, [5, 1, 0])
+  (6, [1, 0])
+  (7, [0])
+ ]
+ -> nil
+ 
+ LR(2)
+ [
+  (1, [5,1])
+  (6, [1])
+ ]
+ ->
+ [
+  (-1, [5,1,2])
+  (4, [1,2])
+  (5, [2])
+ ]
+
+ LRR(4)
+ [
+  (-5, [5,1,2,4])
+  (0, [1,2,4]) -> answer
+  (1, [2,4])
+  (3, [4]
+ ]
+
  */
 
-func findPath(node: TreeNode, sum: Int) -> [[TreeNode]] {
-  let patterns = findPathPatterns(node)
-  return patterns
-    .filter { $0.sum == sum }
-    .map { $0.path }
+func findPath(node: TreeNode, sum: Int) {
+  return findPathPatterns(node, pattern: [(remain: sum-node.data, path: [node])], sum: sum)
 }
 
-func findPathPatterns(node: TreeNode?) -> [(sum: Int, path: [TreeNode])] {
-  guard let node = node else { return [] }
-  let leftPath: [(sum: Int, path: [TreeNode])] = findPathPatterns(node.left)
-  let rightPath: [(sum: Int, path: [TreeNode])] = findPathPatterns(node.right)
+func findPathPatterns(node: TreeNode?, pattern: [(remain: Int, path: [TreeNode])], sum: Int) {
+  // invariant: pattern should include possible patterns up to before this node
+  guard let node = node else { return }
+  let updatedPattern = pattern.map { (remain: $0.remain-node.data, path: $0.path + [node]) }
+ 
+  updatedPattern
+    .filter { $0.remain == 0 }
+    .forEach { print($0.path.map { $0.data }) }
 
-  let myNodePath = (sum: node.data, path: [node])
-  let mineFlavoredPath = (leftPath+rightPath).map { (sum: $0.sum+node.data, path: [node]+$0.path) }
-  
-  return [myNodePath] + leftPath + rightPath + mineFlavoredPath
+  let patternNext = updatedPattern + [(remain: sum-node.data, path: [node])]
+  findPathPatterns(node.left,  pattern: patternNext, sum: sum)
+  findPathPatterns(node.right, pattern: patternNext, sum: sum)
 }
 
 let treeToFindPathPatterns = TreeNode(
@@ -571,6 +607,6 @@ let treeToFindPathPatterns = TreeNode(
   right: TreeNode(data: 6)
 )
 
-print(findPath(treeToFindPathPatterns, sum: 7)[1].map { $0.data })
-assert(findPath(treeToFindPathPatterns, sum: 7)[0].map { $0.data }==[1,2,4])
-assert(findPath(treeToFindPathPatterns, sum: 6).count==5)
+findPath(treeToFindPathPatterns, sum: 7)
+findPath(treeToFindPathPatterns, sum: 6)
+
