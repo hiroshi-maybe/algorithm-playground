@@ -379,3 +379,75 @@ assert(findSuccessor(treeToFindSuccessor1)!.data == 2)
 assert(findSuccessor(treeToFindSuccessor0)!.data == 1)
 assert(findSuccessor(treeToFindSuccessor4)!.data == 5)
 
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.6
+ 
+ *
+ *          5
+ *         / \
+ *        1   6
+ *       / \
+ *      0   2
+ *         / \
+ *        3   4
+ *
+ 
+ find path
+ p: 5 -> 1 -> 0
+ q: 5 -> 1 -> 2 -> 3
+ 
+ */
+
+// Time complexity: O(X + C) = O(N) in worst case, X is node numbers to search (X < N), C is shorter path length for P1 and P2 (C < N)
+// Space complexity: O(D) = O(N) in worst case, D is the biggest depth in the tree (D < N)
+func findCommonAncestor(root: TreeNode, node1: TreeNode, node2: TreeNode) -> TreeNode? {
+  let path1 = findPath(root, node: node1)
+  let path2 = findPath(root, node: node2)
+  
+  // find furthest common element
+  return Zip2Sequence(path1, path2)
+    .map { $0===$1 ? .Some($0) : nil }
+    .flatMap { $0 }
+    .last
+}
+
+// root: 5, node: 0 -> [5,1,0]
+// L: root: 1, node: 0 -> [1,0]
+// LL: root: 0, node: 0 -> [0]
+
+// root: 5, node: 4 -> [5,1,2,4]
+// L: root: 1, node: 4 -> [1,2,4]
+// LL: root: 0, node: 4 -> []
+// LR: root: 2, node: 4 -> [2,4]
+// LRL: root: 3, node: 4 -> []
+// LRR: root: 4, node: 4 -> [4]
+
+func findPath(root: TreeNode?, node: TreeNode) -> [TreeNode] {
+  guard let root = root else { return [] }
+  if root === node { return [node] }
+  
+  let leftPath = findPath(root.left, node: node)
+  if !leftPath.isEmpty { return [root] + leftPath }
+  
+  let rightPath = findPath(root.right, node: node)
+  if !rightPath.isEmpty { return [root] + rightPath }
+  
+  return []
+}
+
+let treeToFindCommonAncestor0 = TreeNode(data: 0)
+let treeToFindCommonAncestor4 = TreeNode(data: 4)
+
+let treeToFindCommonAncestor = TreeNode(
+  data: 5,
+   left: TreeNode(data: 1,
+     left: treeToFindCommonAncestor0,
+    right: TreeNode(data: 2,
+       left: TreeNode(data: 3),
+      right: treeToFindCommonAncestor4)),
+  right: TreeNode(data: 6)
+)
+
+assert(findCommonAncestor(treeToFindCommonAncestor, node1: treeToFindCommonAncestor0, node2: treeToFindCommonAncestor4)!.data == 1)
