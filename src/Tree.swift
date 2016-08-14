@@ -453,3 +453,59 @@ let treeToFindCommonAncestor = TreeNode(
 assert(findPath(treeToFindCommonAncestor, node: treeToFindCommonAncestor0).count == 3)
 assert(findPath(treeToFindCommonAncestor, node: treeToFindCommonAncestor4).count == 4)
 assert(findCommonAncestor(treeToFindCommonAncestor, node1: treeToFindCommonAncestor0, node2: treeToFindCommonAncestor4)!.data == 1)
+
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.7
+ 
+ *
+ *          5
+ *         / \
+ *        1   6
+ *       / \
+ *      0   2
+ *         / \
+ *        3   4
+ *
+ 
+ T1: tree with root 5
+ T2: tree with root 2
+ 
+ 5 != 2
+ L: 1!=2
+ LL: 0!=2
+ LR: 2==2 test if they are equal trees
+ R: 6!=2
+ 
+ */
+
+// Time complexity: O(M + k * N) -> O(M * N) in worst case (check equality for every node in t1 against t2)
+//   where M = size of t1, N = size of t2, k is the number of times to check equality of t1 subtree and t2
+
+func isSubtree(t1: TreeNode?, _ t2: TreeNode?) -> Bool {
+  switch (t1, t2) {
+  case (_, nil):
+    return true
+  case let (.Some(t1), .Some(t2)) where t1 == t2:
+    return true
+  case let (.Some(t1), .Some(t2)):
+    return isSubtree(t1.left, t2) || isSubtree(t1.right, t2)
+  default:
+    return false
+  }
+}
+
+let treeToFindSubtree2 = TreeNode(data: 2,
+                                   left: TreeNode(data: 3),
+                                  right: treeToFindCommonAncestor4)
+
+let treeToFindSubtree = TreeNode(
+  data: 5,
+  left: TreeNode(data: 1,
+    left: treeToFindCommonAncestor0,
+    right: treeToFindSubtree2),
+  right: TreeNode(data: 6)
+)
+
+assert(isSubtree(treeToFindSubtree, treeToFindSubtree2))
