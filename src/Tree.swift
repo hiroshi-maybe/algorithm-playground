@@ -450,4 +450,6 @@ let treeToFindCommonAncestor = TreeNode(
   right: TreeNode(data: 6)
 )
 
+assert(findPath(treeToFindCommonAncestor, node: treeToFindCommonAncestor0).count == 3)
+assert(findPath(treeToFindCommonAncestor, node: treeToFindCommonAncestor4).count == 4)
 assert(findCommonAncestor(treeToFindCommonAncestor, node1: treeToFindCommonAncestor0, node2: treeToFindCommonAncestor4)!.data == 1)
