@@ -94,3 +94,77 @@ let balancedTree = TreeNode(
 )
 
 assert(balanced(balancedTree))
+
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.3
+ 
+ [0,1,2,3,4,5,6], start: 0, end: 7
+ 
+ mid = 3
+ 
+    3
+   / \
+  1   5
+ / \  / \
+0   2 4  6
+ 
+ [0,1,2,3,4,5,6], start: 0, end: 3
+ 
+ midl = 1
+ 
+ [0,1,2,3,4,5,6], start: 0, end: 1
+ 
+ midll = 0
+ 
+ [0,1,2,3,4,5,6], start: 0, end: 0
+ 
+ nil
+ 
+ [0,1,2,3,4,5,6], start: 2, end: 3
+ 
+ midlr = 2
+ 
+ [0,1,2,3,4,5,6], start: 3, end: 3
+ 
+ nil
+ 
+ [0,1,2,3,4,5,6], start: 4, end: 7
+ 
+ midr = 5
+ 
+ [0,1,2,3,4,5,6], start: 4, end: 5
+ 
+ midrl = 4
+ 
+ [0,1,2,3,4,5,6], start: 4, end: 4
+ 
+ nil
+ 
+ [0,1,2,3,4,5,6], start: 6, end: 7
+ 
+ midrr = 6
+ 
+ [0,1,2,3,4,5,6], start: 7, end: 7
+ 
+ nil
+ 
+ */
+
+
+// time complexity: O(L), L is length of data
+// space complexity: O(L + log L) = O(L)
+func createTree(data: [Int], start: Int, end: Int) -> TreeNode? {
+  guard end-start > 1 else { return nil }
+  let mid = start + (end-start) / 2
+  
+  let root = TreeNode(data: data[mid])
+  root.left = createTree(data, start: start, end: mid)
+  root.right = createTree(data, start: mid+1, end: end)
+  
+  return root
+}
+
+let dataForTree = [0,1,2,3,4,5,6]
+print(createTree(dataForTree, start: 0, end: dataForTree.count))
