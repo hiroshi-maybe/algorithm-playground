@@ -284,3 +284,98 @@ assert("\(lists[0])"=="0->nil")
 assert("\(lists[1])"=="1->2->nil")
 assert("\(lists[2])"=="3->4->nil")
 assert("\(lists[3])"=="5->6->nil")
+
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.5
+ 
+ */
+
+class DoublyLinkedTreeNode {
+  var data: Int
+  var left: DoublyLinkedTreeNode? {
+    didSet {
+      left?.parent = self
+    }
+  }
+  var right: DoublyLinkedTreeNode? {
+    didSet {
+      right?.parent = self
+    }
+  }
+  var parent: DoublyLinkedTreeNode?
+  
+  init(data: Int) {
+    self.data = data
+  }
+  
+  init(data: Int, left: DoublyLinkedTreeNode?, right: DoublyLinkedTreeNode?) {
+    self.data = data
+    self.left = left
+    left?.parent = self
+    self.right = right
+    right?.parent = self
+  }
+}
+
+/**
+ 
+ *
+ *          5
+ *         / \
+ *        1   6
+ *       / \
+ *      0   2
+ *         / \
+ *        3   4
+ *
+ 1) has right child -> right child
+   1 -> 2
+ 
+ 2) it's left child -> parent
+   3 -> 2
+ 
+ 3) it's right child leaf -> first parent of left child
+   4 -> 2 -> 1 -> 5
+ 
+ */
+
+func findSuccessor(node: DoublyLinkedTreeNode) -> DoublyLinkedTreeNode? {
+  if let rightChild = node.right { return rightChild }
+  
+  if let parent = node.parent,
+      leftChild = parent.left where leftChild === node {
+    return parent
+  }
+  
+  var pointer = node
+  while let parent = pointer.parent {
+    guard let grandParent = parent.parent else { return nil } // last element (no successor)
+    if let leftChild = grandParent.left where leftChild === parent { return grandParent }
+    
+    pointer = parent
+  }
+  
+  return nil
+}
+
+let treeToFindSuccessor4 = DoublyLinkedTreeNode(data: 4)
+let treeToFindSuccessor0 = DoublyLinkedTreeNode(data: 0)
+let treeToFindSuccessor = DoublyLinkedTreeNode(
+  data: 5,
+   left: DoublyLinkedTreeNode(data: 1,
+     left: treeToFindSuccessor0,
+    right: DoublyLinkedTreeNode(data: 2,
+       left: DoublyLinkedTreeNode(data: 3),
+      right: treeToFindSuccessor4)),
+  right: DoublyLinkedTreeNode(data: 6)
+)
+
+let treeToFindSuccessor1 = treeToFindSuccessor.left!
+
+assert(findSuccessor(treeToFindSuccessor)!.data == 6)
+assert(findSuccessor(treeToFindSuccessor1)!.data == 2)
+assert(findSuccessor(treeToFindSuccessor0)!.data == 1)
+assert(findSuccessor(treeToFindSuccessor4)!.data == 5)
+
