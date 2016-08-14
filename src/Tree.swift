@@ -162,7 +162,7 @@ assert(balanced(balancedTree))
 // time complexity: O(L), L is length of data
 // space complexity: O(L + log L) = O(L)
 func createTree(data: [Int], start: Int, end: Int) -> TreeNode? {
-  guard end-start > 1 else { return nil }
+  guard end-start > 0 else { return nil }
   let mid = start + (end-start) / 2
   
   let root = TreeNode(data: data[mid])
@@ -173,7 +173,15 @@ func createTree(data: [Int], start: Int, end: Int) -> TreeNode? {
 }
 
 let dataForTree = [0,1,2,3,4,5,6]
-print(createTree(dataForTree, start: 0, end: dataForTree.count))
+assert(createTree(dataForTree, start: 0, end: dataForTree.count)==TreeNode(
+  data: 3,
+  left: TreeNode(data: 1,
+     left: TreeNode(data: 0),
+    right: TreeNode(data: 2)),
+ right: TreeNode(data: 5,
+     left: TreeNode(data: 4),
+    right: TreeNode(data: 6))
+))
 
 /**
  
