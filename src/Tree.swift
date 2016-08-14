@@ -502,10 +502,75 @@ let treeToFindSubtree2 = TreeNode(data: 2,
 
 let treeToFindSubtree = TreeNode(
   data: 5,
-  left: TreeNode(data: 1,
-    left: treeToFindCommonAncestor0,
+   left: TreeNode(data: 1,
+     left: treeToFindCommonAncestor0,
     right: treeToFindSubtree2),
   right: TreeNode(data: 6)
 )
 
 assert(isSubtree(treeToFindSubtree, treeToFindSubtree2))
+
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.8
+ 
+ *
+ *          5
+ *         / \
+ *        1   6
+ *       / \
+ *      0   2
+ *         / \
+ *        3   4
+ *
+
+ find path to sum up 7
+
+ [
+  (0, [0]),
+  (1, [1]),
+  (1, [1,0]),
+  (3, [3]), <- leftPath
+  (4, [4]), <- rightPath
+  (2, [2]), <- myNodePath
+  (1, [1,2]),
+  (5, [2,3]), <- left flatMap
+  (6, [2,4]), <- right flatMap
+  (6, [1,2,3]),
+  (7, [1,2,4]),
+  ...
+ ]
+ */
+
+func findPath(node: TreeNode, sum: Int) -> [[TreeNode]] {
+  let patterns = findPathPatterns(node)
+  return patterns
+    .filter { $0.sum == sum }
+    .map { $0.path }
+}
+
+func findPathPatterns(node: TreeNode?) -> [(sum: Int, path: [TreeNode])] {
+  guard let node = node else { return [] }
+  let leftPath: [(sum: Int, path: [TreeNode])] = findPathPatterns(node.left)
+  let rightPath: [(sum: Int, path: [TreeNode])] = findPathPatterns(node.right)
+
+  let myNodePath = (sum: node.data, path: [node])
+  let mineFlavoredPath = (leftPath+rightPath).map { (sum: $0.sum+node.data, path: [node]+$0.path) }
+  
+  return [myNodePath] + leftPath + rightPath + mineFlavoredPath
+}
+
+let treeToFindPathPatterns = TreeNode(
+  data: 5,
+   left: TreeNode(data: 1,
+     left: TreeNode(data: 0),
+    right: TreeNode(data: 2,
+       left: TreeNode(data: 3),
+      right: TreeNode(data: 4))),
+  right: TreeNode(data: 6)
+)
+
+print(findPath(treeToFindPathPatterns, sum: 7)[1].map { $0.data })
+assert(findPath(treeToFindPathPatterns, sum: 7)[0].map { $0.data }==[1,2,4])
+assert(findPath(treeToFindPathPatterns, sum: 6).count==5)
