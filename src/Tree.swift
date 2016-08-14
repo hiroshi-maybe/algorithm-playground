@@ -579,22 +579,23 @@ assert(isSubtree(treeToFindSubtree, treeToFindSubtree2))
 
  */
 
-func findPath(node: TreeNode, sum: Int) {
+func findPath(node: TreeNode, sum: Int) -> [[TreeNode]] {
   return findPathPatterns(node, pattern: [(remain: sum-node.data, path: [node])], sum: sum)
 }
 
-func findPathPatterns(node: TreeNode?, pattern: [(remain: Int, path: [TreeNode])], sum: Int) {
+func findPathPatterns(node: TreeNode?, pattern: [(remain: Int, path: [TreeNode])], sum: Int) -> [[TreeNode]] {
   // invariant: pattern should include possible patterns up to before this node
-  guard let node = node else { return }
+  guard let node = node else { return [] }
   let updatedPattern = pattern.map { (remain: $0.remain-node.data, path: $0.path + [node]) }
  
-  updatedPattern
+  let found = updatedPattern
     .filter { $0.remain == 0 }
-    .forEach { print($0.path.map { $0.data }) }
+    .map { $0.path }
 
   let patternNext = updatedPattern + [(remain: sum-node.data, path: [node])]
-  findPathPatterns(node.left,  pattern: patternNext, sum: sum)
-  findPathPatterns(node.right, pattern: patternNext, sum: sum)
+  return found
+    + findPathPatterns(node.left,  pattern: patternNext, sum: sum)
+    + findPathPatterns(node.right, pattern: patternNext, sum: sum)
 }
 
 let treeToFindPathPatterns = TreeNode(
@@ -607,6 +608,6 @@ let treeToFindPathPatterns = TreeNode(
   right: TreeNode(data: 6)
 )
 
-findPath(treeToFindPathPatterns, sum: 7)
-findPath(treeToFindPathPatterns, sum: 6)
-
+assert(findPath(treeToFindPathPatterns, sum: 7).count == 1)
+assert(findPath(treeToFindPathPatterns, sum: 6).count == 4)
+assert(findPath(treeToFindPathPatterns, sum: 100).count == 0)
