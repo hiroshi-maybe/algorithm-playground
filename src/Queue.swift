@@ -70,3 +70,25 @@ queueByStacks.enque(2)
 queueByStacks.enque(3)
 
 assert(queueByStacks.deque()!==1)
+
+/*
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 3.6
+ 
+ [5, 2, 3, 0]
+ [4,9]
+
+ [5, 2, 3, 9, 4]
+ [0]
+ 
+ [5,2] 3
+ [0,4,9]
+ 
+ [5,2,9,4]
+ [0,3]
+ 
+ [5,2]
+ [0,3,4,9]
+ 
+ */
