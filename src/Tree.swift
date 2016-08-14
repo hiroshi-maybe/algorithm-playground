@@ -24,6 +24,12 @@ class TreeNode {
   }
 }
 
+extension TreeNode: Equatable {}
+func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
+  guard lhs.data == rhs.data else { return false }
+  return lhs.left == rhs.left && lhs.right == rhs.right
+}
+
 /**
  
  https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
@@ -168,3 +174,105 @@ func createTree(data: [Int], start: Int, end: Int) -> TreeNode? {
 
 let dataForTree = [0,1,2,3,4,5,6]
 print(createTree(dataForTree, start: 0, end: dataForTree.count))
+
+/**
+ 
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 4.4
+ 
+ */
+
+class ListNode: CustomDebugStringConvertible {
+  var v: Int
+  var next: ListNode?
+  
+  static func create(ints: [Int]) -> ListNode? {
+    let sorted = ints.map { ListNode(v: $0) }
+    
+    Zip2Sequence(
+      sorted[0..<sorted.count-1],
+      sorted[1..<sorted.count]
+      )
+      .forEach {
+        $0.next = $1
+    }
+    
+    return sorted.first
+  }
+  
+  init(v: Int) {
+    self.v = v
+  }
+  
+  var debugDescription: String {
+    let nextStr = next?.debugDescription ?? "nil"
+    return "\(v)->\(nextStr)"
+  }
+}
+
+/**
+ [0,1,2,3,4,5,6], start: 0, end: 7
+ 
+ mid = 3
+ 
+      3
+    /   \
+   1     5
+  / \   / \
+ 0   2 4   6
+ 
+ BFS
+ 
+ visiting = [3]
+ children = [1,5]
+ 
+ 3 -> nil
+ 
+ visiting = [1,5]
+ children = [0,2,4,6]
+ 
+ 1 -> 5 -> nil
+ 
+ visiting = [0,2,4,6]
+ children = []
+ 
+ 0 -> 2 -> 4 -> 6 -> nil
+ 
+ */
+
+// time complexity: O(T), T is number of elements in input tree
+// space complexity: O(T), Result has T elements of list node
+func depthElements(node: TreeNode) -> [ListNode] {
+  var lists: [ListNode?] = []
+  var visiting: [TreeNode] = [node]
+  var children: [TreeNode] = []
+  
+  while !visiting.isEmpty {
+    // node exists in current depth
+    children = visiting.flatMap { [$0.left, $0.right].flatMap { $0 } }
+    
+    // get all children of nodes in current depth
+    
+    lists.append(ListNode.create(visiting.map { $0.data }))
+    
+    visiting = children
+  }
+  
+  return lists.flatMap { $0 }
+}
+
+let linkedListSourceTree = TreeNode(
+  data: 0,
+   left: TreeNode(data: 1,
+     left: TreeNode(data: 3),
+    right: TreeNode(data: 4,
+       left: TreeNode(data: 5),
+      right: TreeNode(data: 6))),
+  right: TreeNode(data: 2)
+)
+
+let lists = depthElements(linkedListSourceTree)
+assert("\(lists[0])"=="0->nil")
+assert("\(lists[1])"=="1->2->nil")
+assert("\(lists[2])"=="3->4->nil")
+assert("\(lists[3])"=="5->6->nil")
