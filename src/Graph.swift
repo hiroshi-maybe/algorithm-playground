@@ -95,6 +95,8 @@ func findPath(graph: Graph, start: Graph.VertexID, end: Graph.VertexID) -> Bool 
 assert(findPath(graph1, start: 1, end: 5))
 assert(!findPath(graph1, start: 1, end: 7))
 
+// Time complexity: O(E + V^2), E is size of edges, V is size of vertices (E < V^2)
+// Space complexity: O(V)
 func shortestPathDikjkstra(graph: Graph, start: Graph.VertexID, end: Graph.VertexID) -> Int {
   var distances: [Graph.VertexID: Int] = graph.vertexDic(Int.max)
   var vertex = Set(graph.vertex)
@@ -102,10 +104,10 @@ func shortestPathDikjkstra(graph: Graph, start: Graph.VertexID, end: Graph.Verte
   distances[start] = 0
 
   while !vertex.isEmpty {
-    let shortestDistance = shortestVertex(vertex, distances: distances)
+    let shortestDistance = shortestVertex(vertex, distances: distances) // O(V)
     vertex.remove(shortestDistance.vertex)
     
-    graph.adjascent(shortestDistance.vertex).forEach {
+    graph.adjascent(shortestDistance.vertex).forEach { // this goes through O(E) for all vertices
       distances[$0.vertex] = min(distances[$0.vertex]!, shortestDistance.distance + $0.weight)
     }
   }
@@ -116,7 +118,7 @@ func shortestPathDikjkstra(graph: Graph, start: Graph.VertexID, end: Graph.Verte
 func shortestVertex(vertex: Set<Graph.VertexID>, distances: [Graph.VertexID: Int]) -> (vertex: Graph.VertexID, distance: Int)! {
   return vertex
     .map { ($0, distances[$0]!) }
-    .sort { $0.1 < $1.1 }
+    .sort { $0.1 < $1.1 } // actually should just iterate to achieve time complexity O(V)
     .first!
 }
 
