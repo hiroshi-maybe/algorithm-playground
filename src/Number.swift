@@ -127,26 +127,28 @@ assert(permutationIndex("abbc", b: "babcabbacaabcbabcacbb")==[3, 5, 6, 8, 13, 14
  * elements. (i.e. [1,3,0,8,12,0,4,0,7] --> [1,3,8,12,4,7,0,0,0])
 
  1,3,0,8,12,0,4,0,7
-   *
-   *
+ I->
+ M->
+ 
+ data[0..M] != 0, data[M+1..I] == 0
  
  1,3,0,8,12,0,4,0,7
      *->
-     *
+   *
 
  1,3,0,8,12,0,4,0,7
        *
-     *
+   *
  
- // swap
+ // move M and swap
  
  1,3,8,0,12,0,4,0,7
        *
-     *->
+     *
 
  1,3,8,0,12,0,4,0,7
-       *
-       *
+         *
+     *
 
  swap when non zero is found
 
@@ -156,7 +158,7 @@ assert(permutationIndex("abbc", b: "babcabbacaabcbabcacbb")==[3, 5, 6, 8, 13, 14
 
  1,3,8,12,0,0,4,0,7
               *
-          *
+        *
 
  1,3,8,12,4,0,0,0,7
               *
@@ -173,34 +175,16 @@ assert(permutationIndex("abbc", b: "babcabbacaabcbabcacbb")==[3, 5, 6, 8, 13, 14
  */
 
 func moveZeroBackward(var data: [Int]) -> [Int] {
-  var iterator = 0
-  var idxToSwap = 0
-  
-  while data[idxToSwap] != 0 && iterator < data.count {
-    idxToSwap+=1
-    iterator+=1
-  }
-  
-  if iterator == data.count {
-    // no zero found
-    return data
-  }
-  
-  // invariant: iterator and idxToSwap points `0`
-  
-  while iterator < data.count {
-    // invariant: idxToSwap points `0`
-    
-    if data[iterator] != 0 {
-      data[idxToSwap] = data[iterator]
-      data[iterator] = 0
-      // invariant: idxToSwap points non-zero
-      while data[idxToSwap] != 0 {
-        idxToSwap+=1
-      }
+  var m = -1
+
+  for i in 0 ..< data.count {
+    // invariant: data[0..M] != 0, data[M+1..I] == 0
+    if data[i] != 0 {
+      m += 1
+      let tmp = data[i]
+      data[i] = data[m]
+      data[m] = tmp
     }
-    
-    iterator += 1
   }
   
   return data
