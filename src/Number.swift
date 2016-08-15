@@ -118,3 +118,92 @@ func createEmptyTable(set: Set<Character>) -> [Character: Int] {
 }
 
 assert(permutationIndex("abbc", b: "babcabbacaabcbabcacbb")==[3, 5, 6, 8, 13, 14, 15, 16, 20])
+
+/**
+
+  https://www.careercup.com/question?id=5738847481626624
+ 
+ * Given an unsorted integer array, place all zeros to the end of the array without changing the sequence of non-zero
+ * elements. (i.e. [1,3,0,8,12,0,4,0,7] --> [1,3,8,12,4,7,0,0,0])
+
+ 1,3,0,8,12,0,4,0,7
+   *
+   *
+ 
+ 1,3,0,8,12,0,4,0,7
+     *->
+     *
+
+ 1,3,0,8,12,0,4,0,7
+       *
+     *
+ 
+ // swap
+ 
+ 1,3,8,0,12,0,4,0,7
+       *
+     *->
+
+ 1,3,8,0,12,0,4,0,7
+       *
+       *
+
+ swap when non zero is found
+
+ 1,3,8,0,12,0,4,0,7
+         *
+       *
+
+ 1,3,8,12,0,0,4,0,7
+              *
+          *
+
+ 1,3,8,12,4,0,0,0,7
+              *
+            *
+
+ 1,3,8,12,4,0,0,0,7
+                  *
+            *
+
+ 1,3,8,12,4,7,0,0,0
+                  *
+            *
+ 
+ */
+
+func moveZeroBackward(var data: [Int]) -> [Int] {
+  var iterator = 0
+  var idxToSwap = 0
+  
+  while data[idxToSwap] != 0 && iterator < data.count {
+    idxToSwap+=1
+    iterator+=1
+  }
+  
+  if iterator == data.count {
+    // no zero found
+    return data
+  }
+  
+  // invariant: iterator and idxToSwap points `0`
+  
+  while iterator < data.count {
+    // invariant: idxToSwap points `0`
+    
+    if data[iterator] != 0 {
+      data[idxToSwap] = data[iterator]
+      data[iterator] = 0
+      // invariant: idxToSwap points non-zero
+      while data[idxToSwap] != 0 {
+        idxToSwap+=1
+      }
+    }
+    
+    iterator += 1
+  }
+  
+  return data
+}
+
+assert(moveZeroBackward([1,3,0,8,12,0,4,0,7])==[1,3,8,12,4,7,0,0,0])
