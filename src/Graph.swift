@@ -13,10 +13,25 @@ struct Graph {
   let vertex: [VertexID]
   let edge: [(from: VertexID, to: VertexID, weight: Int)]
   
+  func vertexDic<T>(initial: T) -> [VertexID: T] {
+    var dic = [VertexID: T]()
+    vertex.forEach {
+      dic[$0] = initial
+    }
+    
+    return dic
+  }
+  
   func adjascent(vertex: VertexID) -> [VertexID] {
     return edge
       .filter { $0.from == vertex }
       .map { $0.to }
+  }
+  
+  func adjascent(vertex: VertexID) -> [(vertex: VertexID, weight: Int)] {
+    return edge
+      .filter { $0.from == vertex }
+      .map { (vertex: $0.to, weight: $0.weight) }
   }
 }
 
@@ -79,3 +94,30 @@ func findPath(graph: Graph, start: Graph.VertexID, end: Graph.VertexID) -> Bool 
 
 assert(findPath(graph1, start: 1, end: 5))
 assert(!findPath(graph1, start: 1, end: 7))
+
+func shortestPathDikjkstra(graph: Graph, start: Graph.VertexID, end: Graph.VertexID) -> Int {
+  var distances: [Graph.VertexID: Int] = graph.vertexDic(Int.max)
+  var vertex = Set(graph.vertex)
+  
+  distances[start] = 0
+
+  while !vertex.isEmpty {
+    let shortestDistance = shortestVertex(vertex, distances: distances)
+    vertex.remove(shortestDistance.vertex)
+    
+    graph.adjascent(shortestDistance.vertex).forEach {
+      distances[$0.vertex] = min(distances[$0.vertex]!, shortestDistance.distance + $0.weight)
+    }
+  }
+  
+  return distances[end]!
+}
+
+func shortestVertex(vertex: Set<Graph.VertexID>, distances: [Graph.VertexID: Int]) -> (vertex: Graph.VertexID, distance: Int)! {
+  return vertex
+    .map { ($0, distances[$0]!) }
+    .sort { $0.1 < $1.1 }
+    .first!
+}
+
+assert(shortestPathDikjkstra(graph1, start: 1, end: 6)==11)
