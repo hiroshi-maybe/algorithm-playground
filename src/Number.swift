@@ -191,3 +191,28 @@ func moveZeroBackward(var data: [Int]) -> [Int] {
 }
 
 assert(moveZeroBackward([1,3,0,8,12,0,4,0,7])==[1,3,8,12,4,7,0,0,0])
+
+/**
+ 
+ https://www.careercup.com/question?id=5763751446839296
+ 
+ * [1,6,3,4,5,2,7] -> [1,6,5,4,3,2,7] -> [1,2,3,4,5,6,7]
+ 
+ */
+
+func canSortByReverse(data: [Int]) -> Bool {
+  guard data.count % 2 == 1 else { return false }
+  let sorted = data.sort { $0 < $1 }
+  
+  for i in 0 ..< data.count {
+    if data[i] == sorted[i] || data[i] == sorted[data.count-i-1] {
+      continue
+    }
+    
+    return false
+  }
+  
+  return true
+}
+
+assert(canSortByReverse([1,6,3,4,5,2,7]))
