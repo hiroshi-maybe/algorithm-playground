@@ -216,3 +216,42 @@ func canSortByReverse(data: [Int]) -> Bool {
 }
 
 assert(canSortByReverse([1,6,3,4,5,2,7]))
+
+/////////////////////////////////
+
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 8.1
+
+func nthFibonacci(n: Int) -> Int {
+  var pp = 0
+  var p = 1
+  
+  switch (n) {
+  case Int.min..<2: return pp
+  case 2: return p
+  default: break
+  }
+
+  // invariant: n > 2
+  
+  var counter = n - 2
+  
+  // invariant: counter > 0
+  
+  while counter > 0 {
+    let t = p
+    p = pp + t
+    pp = t
+    counter -= 1
+  }
+  
+  return p
+}
+
+assert(nthFibonacci(0)==0)
+assert(nthFibonacci(1)==0)
+assert(nthFibonacci(2)==1)
+assert(nthFibonacci(3)==1)
+assert(nthFibonacci(4)==2)
+assert(nthFibonacci(5)==3)
+assert(nthFibonacci(21)==6765)
