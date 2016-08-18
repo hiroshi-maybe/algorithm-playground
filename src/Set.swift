@@ -53,3 +53,31 @@ func generateSubset(set: Set<String>) -> [Set<String>] {
 }
 
 assert(generateSubset(["a", "b", "c"]).count == 8)
+
+/////////////////////////////////
+
+/**
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 8.4
+
+ s = "{a,b,c} -> "abc", "acb", "bac", "bca", "cab", "cba"
+ 
+ [a + p({b,c})], [b + p({a,c})]
+
+ 
+*/
+
+// time complexity: O(n!)
+// space complexity: O(n!)
+
+func generatePermutation(set: Set<String>) -> [String] {
+  guard set.count > 0 else { return [""] }
+  return set.flatMap { (ch: String) -> [String] in
+    var myset = set
+    myset.remove(ch)
+    return generatePermutation(myset).map { ch + $0 }
+  }
+}
+
+assert(generatePermutation(Set(["a","b","c"])).count==6)
+
