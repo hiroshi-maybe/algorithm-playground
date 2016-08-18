@@ -36,23 +36,20 @@ assert(intersection(ar1, ar2)==Set([15, 19, 21]))
 /////////////////////////////////
 
 // http://www.slideshare.net/gayle2/cracking-the-facebook-coding-interview
+// https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+// Q 8.3
 //
 // All subsets
 // s = {"a", "b", "c"} -> [{}, {a}, {b}, {c}, {a, b}, ..., {a, b, c}]
 
 // time complexity: n + (n-1) + .. 1 = O(S^2), S = Size of set
 // space complexity: nCn + nCn-1 + ... + nC1 = 1 + n + .. n := O(S^2)?
-func generateSubset(orgSet: Set<String>) -> [Set<String>] {
-  guard orgSet.count > 0 else { return [Set()] }
-  var set = orgSet
-  let first = set.removeFirst()
-  
-  let subset = generateSubset(set) // call stack: S
-  
-  return subset + subset.map { (var setEl: Set<String>) in
-    setEl.insert(first)
-    return setEl
-  }
+func generateSubset(set: Set<String>) -> [Set<String>] {
+  var orgSet = set
+  guard let first = orgSet.first else { return [Set()] }
+  orgSet.remove(first)
+  let subset = generateSubset(orgSet) // Call stack: S
+  return subset + subset.flatMap { Set([first]).union($0) }
 }
 
 assert(generateSubset(["a", "b", "c"]).count == 8)
