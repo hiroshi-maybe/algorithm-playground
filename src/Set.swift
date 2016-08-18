@@ -81,3 +81,38 @@ func generatePermutation(set: Set<String>) -> [String] {
 
 assert(generatePermutation(Set(["a","b","c"])).count==6)
 
+/**
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 8.5
+ 
+ 3 -> [[1,1,1], [1,2], [2,1], [3]] -> "()()()","()(())","(())()","((()))"
+ 
+ */
+
+func generateParenthesesComb(n: Int) -> [String] {
+  return generateNumSet(n).map { nums in
+    return nums
+      .map { String(count: $0, repeatedValue: Character("(")) + String(count: $0, repeatedValue: Character(")")) }
+      .joinWithSeparator("")
+  }
+}
+
+// 3 ->
+//  1 -> {1} + {gen(2)}
+//  2 -> {2} + {gen(1)}
+//  3 -> {3} + {gen(0)}
+
+// 2 ->
+//  1 -> {1} + {gen(1)}
+//  2 -> {2} + {gen(0)}
+
+func generateNumSet(n: Int) -> [[Int]] {
+  guard n > 0 else { return [[]] }
+  
+  // invariant: n >= 1
+  return Array(1...n).flatMap { m in
+    return generateNumSet(n-m).map { [m] + $0 }
+  }
+}
+
+assert(generateParenthesesComb(3).count==4)
