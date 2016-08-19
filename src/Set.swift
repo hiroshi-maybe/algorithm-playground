@@ -116,3 +116,31 @@ func generateNumSet(n: Int) -> [[Int]] {
 }
 
 assert(generateParenthesesComb(3).count==4)
+
+/**
+ https://www.amazon.com/Cracking-Coding-Interview-Programming-Questions/dp/098478280X
+ Q 8.7
+ 
+ 31
+ -> 25*1 + p(6)
+ -> 10*3 + p(1)
+ -> 10*2 + p(6)
+ -> 10*1 + p(21)
+ ->  5*6 + p(1)
+ ->  5*5 + p(6)
+ 
+ */
+
+func payNCents(n: Int, coins: [Int] = [25, 10, 5]) -> Int {
+  let available = coins.filter { $0 <= n }
+  guard let first = available.first else { return 1 }
+  
+  var res = 0
+  for i in 0...n/first {
+    res += payNCents(n-(first*i), coins: Array(available[1..<available.count]))
+  }
+  
+  return res
+}
+
+assert(payNCents(15)==6)
