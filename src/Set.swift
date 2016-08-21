@@ -129,18 +129,67 @@ assert(generateParenthesesComb(3).count==4)
  ->  5*6 + p(1)
  ->  5*5 + p(6)
  
+ X(1) = 1
+ X(2) = 1 / X(1)
+ X(3) = 1 / X(1)
+ X(4) = 1 / X(1)
+ X(5) = 2 / X(4) + 1(5x1) / 1(5) [5:1]
+ X(6) = 2 / X(5)
+ ...
+ X(10) = 4 / X(9) (1x10, 5x1+1x5) + 1(5x2) + 1(10x1) / DP(5)[5] + 1(10) / [5:1,10:1]
+ X(11) = 4
+ ...
+ X(15) = 6 / X(14) + 1(5x3) + 1(10x1+5x1) / DP(10)[5] + DP(10)[10] [5:2]
+ ...
+ X(20) = X(19) + 1(5x4) + 1(10x1+5x2) + 1(10x2) / DP(15)[5] + DP(10)[10] [5:2, 10:1]
+ 
+ 1x20,1x15+5x1,1x
+ 
+ X(25) = X(24) + 1(5x5) + 1(10x1+5x2) / 3 DP(20).all + 0 DP(15)[10] + 1(25) [5:3, 10: 0, 25: 1]
+
+ X(30) = X(29) + 4 + 1 + 0 / DP(25).all + DP(20)[10] + DP[5][25] [5:4, 10:1, 25:0]
+ 
+ X(N) = X(N-1)
+        + (1 if new appearance) + X(N-5)[10] + X(N-5)[10] + X(N-5)[25]
+        + (1 if new appearance) + X(N-10)[10] + X(N-10)[25]
+        + (1 if new appearance) + X(N-25)[25]
+ 
  */
 
-func payNCents(n: Int, coins: [Int] = [25, 10, 5]) -> Int {
-  let available = coins.filter { $0 <= n }
-  guard let first = available.first else { return 1 }
-  
-  var res = 0
-  for i in 0...n/first {
-    res += payNCents(n-(first*i), coins: Array(available[1..<available.count]))
+func payNCents(n: Int) -> Int {
+  // Actually only floating window 25 is needed for computation! Space complexity: O(1)
+  var coinDP: [[Int: Int]] = Array(count: n+1, repeatedValue: [5: 0, 10: 0, 25: 0])
+  guard n > 0 else { return 0 }
+  var res = 1
+  for i in 2...n {
+    let lastFive = existingPattern(i, coin: 5, coinDP: coinDP) + firstAppearance(i, coin: 5)
+    let lastTen = existingPattern(i, coin: 10, coinDP: coinDP) + firstAppearance(i, coin: 10)
+    let lastTwentyFive = existingPattern(i, coin: 25, coinDP: coinDP) + firstAppearance(i, coin: 25)
+
+    res += lastFive + lastTen + lastTwentyFive
+
+    coinDP[i] = [5: lastFive, 10: lastTen, 25: lastTwentyFive]
   }
   
   return res
 }
 
+func firstAppearance(n: Int, coin: Int) -> Int {
+  return n == coin ? 1 : 0
+}
+
+func existingPattern(n: Int, coin: Int, coinDP: [[Int: Int]]) -> Int {
+  guard n % coin == 0 && n > coin else { return 0 }
+  
+  guard n-coin < coinDP.count else { return 0 }
+  let prevPat = coinDP[n-coin]
+  
+  return prevPat.filter { $0.0 >= coin }.reduce(0) { return $0+$1.1 }
+}
+
+assert(payNCents(10)==4)
 assert(payNCents(15)==6)
+assert(payNCents(20)==9)
+assert(payNCents(25)==13)
+assert(payNCents(26)==13)
+assert(payNCents(30)==18)
