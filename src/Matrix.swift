@@ -219,3 +219,130 @@ assert(fillZeroInMatrix(matrixToFillZero)==[
   [0, 0, 0, 0]
   ]
 )
+
+/*
+
+ https://en.wikipedia.org/wiki/Dynamic_programming
+ A type of balanced 0–1 matrix
+ 
+ OK
+ 
+ 0,1,0,1
+ 1,0,1,0
+ 0,1,0,1
+ 1,0,1,0
+ 
+ 1,1,0,0
+ 1,1,0,0
+ 0,0,1,1
+ 0,0,1,1
+
+ 1,1,0,0
+ 0,0,1,1
+ 1,1,0,0
+ 0,0,1,1
+
+ 1,0,1,0
+ 0,1,0,1
+ 0,1,0,1
+ 1,0,1,0
+ 
+ NG
+ 
+ 1,1,0,1
+ 1,0,1,0
+ 0,1,0,1
+ 1,0,1,0
+ 
+ 1. Brute force
+ 
+ i in 0..<n
+  j in 0..<n
+   matrix[i,j] = 0 or 1
+ 
+ check if matrix is balanced?
+ 
+ 2. Recursive call
+
+ cap = [(2,2),(2,2),(2,2),(2,2)]
+ 
+ f(n, cap) {
+   check memo (DP. simple backtracking if we don't apply memoization)
+   if n==0 check 1 if all zero in cap
+   
+   c in combinations for 4 columns {
+    f(n-1, cap-c)
+   }
+ }
+ 
+ */
+
+typealias ColumnCap = (Int, Int)
+func balancedMatrixPattern(n: Int) -> Int {
+  let colCaps = Array(count: n, repeatedValue:(n/2, n/2))
+  var memo: [String: Int] = [:]
+  let rowCombination = combinationsForRow(n)
+  
+  return balancedMatrixPattern(n, colCaps: colCaps, rowCombination: rowCombination, memo: &memo)
+}
+
+func balancedMatrixHash(key: (Int, [ColumnCap])) -> String {
+  let colcapKey = key.1.map { "(\($0.0),\($0.1))" }
+  return "\(key.0)|\(colcapKey)"
+}
+
+func balancedMatrixPattern(n: Int, colCaps: [ColumnCap], rowCombination: RowCombination, inout memo: [String: Int]) -> Int {
+  if let memoized = memo[balancedMatrixHash((n, colCaps))] { return memoized }
+  if !colCaps.filter({ $0.0<0 || $0.1<0 }).isEmpty { return 0 }
+
+  if n==0 {
+    let res = (colCaps.filter { $0.0==0 && $0.1==0 }.count) == colCaps.count ? 1 : 0
+    memo[balancedMatrixHash((n, colCaps))] = res
+    return res
+  }
+  
+  var res = 0
+  for row in rowCombination {
+    let colCapsNext = Zip2Sequence(row, colCaps)
+      .map { (isOne, col) in (col.0 - (isOne ? 0 : 1), col.1 - (isOne ? 1 : 0)) }
+    res += balancedMatrixPattern(n-1, colCaps: colCapsNext, rowCombination: rowCombination, memo: &memo)
+  }
+
+  memo[balancedMatrixHash((n, colCaps))] = res
+  return res
+}
+
+typealias RowCombination = [[Bool]]
+func combinationsForRow(n: Int) -> RowCombination {
+  assert(n % 2==0)
+  let capacity = n/2 + 1
+  var memo: [[RowCombination?]] = Array(count: capacity, repeatedValue: Array(count: capacity, repeatedValue: nil))
+  return combinationsForRow(n/2, n/2, memo: &memo)
+}
+
+func combinationsForRow(one: Int, _ zero: Int, inout memo: [[RowCombination?]]) -> RowCombination {
+  if let memoized = memo[one][zero] { return memoized }
+  
+  let list: RowCombination
+  switch (one, zero) {
+  case(0, 0):
+    list = [[]]
+  case(1..<Int.max, 0):
+    list = combinationsForRow(one-1, zero, memo: &memo).map { [true]+$0 }
+  case(0, 1..<Int.max):
+    list = combinationsForRow(one, zero-1, memo: &memo).map { [false]+$0 }
+  default:
+    let c1: RowCombination = combinationsForRow(one, zero-1, memo: &memo).map { [false]+$0 }
+    let c2: RowCombination = combinationsForRow(one-1, zero, memo: &memo).map { [true]+$0 }
+    list = c1 + c2
+  }
+  
+  memo[one][zero] = list
+  
+  return list
+}
+
+// https://oeis.org/A058527
+assert(balancedMatrixPattern(2)==2)
+assert(balancedMatrixPattern(4)==90)
+assert(balancedMatrixPattern(6)==297200)
