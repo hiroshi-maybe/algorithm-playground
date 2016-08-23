@@ -346,3 +346,54 @@ func combinationsForRow(one: Int, _ zero: Int, inout memo: [[RowCombination?]]) 
 assert(balancedMatrixPattern(2)==2)
 assert(balancedMatrixPattern(4)==90)
 assert(balancedMatrixPattern(6)==297200)
+
+/*
+ 
+ https://en.wikipedia.org/wiki/Dynamic_programming
+ Checkerboard
+ 
+ 6 7 4 7 8
+ 7 6 1 1 4
+ 3 5 7 8 2
+ 9 6 7 0 8
+ 8 9 5 9 8
+ 
+ P(N) = min(P(i,N))
+ P(i, N) = min(P(i-1,N-1), P(i,N-1), P(i+1,N-1) + c(i,N)
+
+ DP[i][N+1] = min(DP[i-1][N], DP[i][N], DP[i+1][N] + c(i,N+1)
+
+ */
+
+let checkerboard = [
+  [6,7,4,7,8],
+  [7,6,1,1,4],
+  [3,5,7,8,2],
+  [9,6,7,0,8],
+  [8,9,5,9,8],
+]
+
+func shortestPath(checkerboard: [[Int]], length: Int) -> Int {
+  // dp[row][col]
+  var dp = Array(count: length, repeatedValue: Array(count: length, repeatedValue: Int.max))
+  for i in 0..<length {
+    dp[0][i] = checkerboard[0][i]
+  }
+  
+  for row in 1..<length {
+    for col in 0..<length {
+      let left   = col > 0 ? dp[row-1][col-1] : Int.max
+      let center = dp[row-1][col]
+      let right  = col < length-1 ? dp[row-1][col+1] : Int.max
+      dp[row][col] = min(left, center, right) + checkerboard[row][col]
+    }
+  }
+  
+  var res = Int.max
+  for p in dp[length-1] {
+    res = min(res, p)
+  }
+  return res
+}
+
+assert(shortestPath(checkerboard, length: checkerboard.count)==12)
