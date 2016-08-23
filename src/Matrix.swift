@@ -364,7 +364,7 @@ assert(balancedMatrixPattern(6)==297200)
  DP[i][N+1] = min(DP[i-1][N], DP[i][N], DP[i+1][N] + c(i,N+1)
  
  Time complexity: O(N^2)
- Space complexity: O(N^2), note that this can be O(N) by using two rows of memo
+ Space complexity: O(N)
 
  */
 
