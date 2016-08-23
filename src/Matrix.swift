@@ -362,6 +362,9 @@ assert(balancedMatrixPattern(6)==297200)
  P(i, N) = min(P(i-1,N-1), P(i,N-1), P(i+1,N-1) + c(i,N)
 
  DP[i][N+1] = min(DP[i-1][N], DP[i][N], DP[i+1][N] + c(i,N+1)
+ 
+ Time complexity: O(N^2)
+ Space complexity: O(N^2), note that this can be O(N) by using two rows of memo
 
  */
 
@@ -375,22 +378,23 @@ let checkerboard = [
 
 func shortestPath(checkerboard: [[Int]], length: Int) -> Int {
   // dp[row][col]
-  var dp = Array(count: length, repeatedValue: Array(count: length, repeatedValue: Int.max))
+  var dp = Array(count: 2, repeatedValue: Array(count: length, repeatedValue: Int.max))
   for i in 0..<length {
     dp[0][i] = checkerboard[0][i]
   }
   
   for row in 1..<length {
     for col in 0..<length {
-      let left   = col > 0 ? dp[row-1][col-1] : Int.max
-      let center = dp[row-1][col]
-      let right  = col < length-1 ? dp[row-1][col+1] : Int.max
-      dp[row][col] = min(left, center, right) + checkerboard[row][col]
+      let prev = dp[(row-1)%2]
+      let left   = col > 0 ? prev[col-1] : Int.max
+      let center = prev[col]
+      let right  = col < length-1 ? prev[col+1] : Int.max
+      dp[row%2][col] = min(left, center, right) + checkerboard[row][col]
     }
   }
   
   var res = Int.max
-  for p in dp[length-1] {
+  for p in dp[(length-1)%2] {
     res = min(res, p)
   }
   return res
