@@ -401,3 +401,39 @@ func shortestPath(checkerboard: [[Int]], length: Int) -> Int {
 }
 
 assert(shortestPath(checkerboard, length: checkerboard.count)==12)
+
+/*
+ 
+ https://en.wikipedia.org/wiki/Dynamic_programming
+ https://en.wikipedia.org/wiki/Matrix_chain_multiplication
+ Matrix chain multiplication
+ 
+ m[i,j] = min { m[i,k]+m[k+1,j]+A[i].row*A[k].col*A[j].col | k=i..<j }
+ 
+ Time complexity: O(N^3)
+ Space complexity: O(N^2)
+ 
+ */
+
+let matrixDims = [(10,100),(100,10),(10,1000)]
+func optimalMatrixChainAssociation(matrix: [(Int, Int)]) -> Int {
+  var m = Array(count: matrix.count, repeatedValue: Array(count: matrix.count, repeatedValue: Int.max))
+  
+  for i in 0..<matrix.count {
+    m[i][i] = 0
+  }
+  
+  for len in 2...matrix.count {
+    for i in 0...matrix.count-len {
+      let j = i+len-1
+      for k in i...j-1 {
+        let total = m[i][k] + m[k+1][j] + matrix[i].0 * matrix[k].1 * matrix[j].1
+        m[i][j] = min(m[i][j], total)
+      }
+    }
+  }
+  
+  return m[0][matrix.count-1]
+}
+
+print(optimalMatrixChainAssociation(matrixDims))
